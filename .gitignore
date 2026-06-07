@@ -1,0 +1,14 @@
+# Local docs & analysis files
+docs/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment variables
+.env
+
+# Temporary files
+email_preview.html
+*.tmp
