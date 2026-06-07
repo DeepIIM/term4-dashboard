@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Term-IV Dashboard | PGP 2025-27</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'sans-serif'] },
+          colors: {
+            slate: { 850: '#1e293b', 900: '#0f172a', 950: '#020617' }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); }
+    .card-hover { transition: all 0.2s ease; cursor: pointer; }
+    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 48px -12px rgba(0,0,0,0.6); }
+    .tab-btn { transition: all 0.2s ease; position: relative; }
+    .tab-btn.active { color: #fff; }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 2px; }
+    .tab-btn:not(.active):hover { color: #cbd5e1; }
+    .session-row { transition: background 0.15s ease; }
+    .session-row:hover { background: rgba(255,255,255,0.03); }
+    .animate-fade { animation: fadeIn 0.3s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .back-to-back { border-left: 2px solid rgba(99, 102, 241, 0.4); }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen">
+
+  <!-- Navbar -->
+  <nav class="glass sticky top-0 z-40 border-b border-slate-800">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between py-4">
+        <div class="flex items-center gap-3">
+          <div class="w-9 h-9 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-sm">IV</div>
+          <div>
+            <h1 class="text-base font-bold text-white leading-tight">Term-IV Dashboard</h1>
+            <p class="text-[10px] text-slate-400">PGP 2025-27</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportAttendance()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors hidden sm:block">Export</button>
+          <button onclick="resetAttendance()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:bg-rose-500/20 hover:text-rose-400 transition-colors hidden sm:block">Reset</button>
+          <div class="text-right ml-2">
+            <p id="current-date" class="text-xs font-medium text-slate-300"></p>
+            <p id="current-time" class="text-[10px] text-slate-500"></p>
+          </div>
+        </div>
+      </div>
+      <div class="flex gap-6 text-sm border-b border-slate-800/50 -mb-px">
+        <button class="tab-btn active pb-3 text-slate-300 font-medium" onclick="switchTab('home')" data-tab="home">Home</button>
+        <button class="tab-btn pb-3 text-slate-500 font-medium" onclick="switchTab('courses')" data-tab="courses">My Courses</button>
+        <button class="tab-btn pb-3 text-slate-500 font-medium" onclick="switchTab('calendar')" data-tab="calendar">Session Calendar</button>
+      </div>
+    </div>
+  </nav>
+
+  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- HOME TAB -->
+    <div id="tab-home" class="tab-content animate-fade">
+      <!-- Stats Row -->
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="glass rounded-2xl p-5 flex flex-col items-center text-center">
+          <div class="relative w-20 h-20 mb-3">
+            <div class="absolute inset-0 rounded-full" id="term-ring" style="background: conic-gradient(from 0deg, #6366f1 var(--progress), rgba(255,255,255,0.05) var(--progress))"></div>
+            <div class="absolute inset-1.5 rounded-full bg-slate-900 flex items-center justify-center"><span id="term-pct" class="text-lg font-bold text-white">0%</span></div>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Term Done</p>
+          <p id="term-dates" class="text-[10px] text-slate-600 mt-0.5">Jun 15 – Aug 8</p>
+        </div>
+        <div class="glass rounded-2xl p-5 flex flex-col items-center text-center">
+          <div class="relative w-20 h-20 mb-3">
+            <div class="absolute inset-0 rounded-full" id="cfa-ring" style="background: conic-gradient(from 0deg, #10b981 var(--progress), rgba(255,255,255,0.05) var(--progress))"></div>
+            <div class="absolute inset-1.5 rounded-full bg-slate-900 flex items-center justify-center"><span id="cfa-days" class="text-xl font-bold text-emerald-400">0</span></div>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Days to CFA</p>
+          <p class="text-[10px] text-slate-600 mt-0.5">Aug 19, 2026</p>
+        </div>
+        <div class="glass rounded-2xl p-5 flex flex-col items-center text-center">
+          <div class="relative w-20 h-20 mb-3">
+            <div class="absolute inset-0 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
+              <span id="free-days" class="text-2xl font-bold text-amber-400">--</span>
+            </div>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Next Free Day</p>
+          <p id="free-date" class="text-[10px] text-slate-600 mt-0.5">--</p>
+        </div>
+        <div class="glass rounded-2xl p-5 flex flex-col items-center text-center">
+          <div class="relative w-20 h-20 mb-3">
+            <div class="absolute inset-0 rounded-full" id="att-ring" style="background: conic-gradient(from 0deg, #8b5cf6 var(--progress), rgba(255,255,255,0.05) var(--progress))"></div>
+            <div class="absolute inset-1.5 rounded-full bg-slate-900 flex items-center justify-center"><span id="att-pct" class="text-lg font-bold text-white">--</span></div>
+          </div>
+          <p class="text-xs text-slate-400 font-medium">Attendance</p>
+          <p id="att-detail" class="text-[10px] text-slate-600 mt-0.5">--/--</p>
+        </div>
+      </section>
+
+      <!-- Today & Tomorrow -->
+      <section class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+        <div class="glass rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold text-white flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>Today</h2>
+            <span id="home-today-date" class="text-[11px] text-slate-500"></span>
+          </div>
+          <div id="home-today-list" class="space-y-2"></div>
+        </div>
+        <div class="glass rounded-2xl p-5">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-bold text-white flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span>Tomorrow</h2>
+            <span id="home-tmrw-date" class="text-[11px] text-slate-500"></span>
+          </div>
+          <div id="home-tmrw-list" class="space-y-2"></div>
+        </div>
+      </section>
+
+      <!-- Course Progress -->
+      <section class="glass rounded-2xl p-5">
+        <h2 class="text-sm font-bold text-white mb-4">Course Progress</h2>
+        <div id="home-progress-list" class="space-y-3"></div>
+      </section>
+    </div>
+
+    <!-- COURSES TAB -->
+    <div id="tab-courses" class="tab-content hidden animate-fade">
+      <div id="courses-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+    </div>
+
+    <!-- CALENDAR TAB -->
+    <div id="tab-calendar" class="tab-content hidden animate-fade">
+      <div class="glass rounded-2xl p-5 overflow-x-auto">
+        <div id="cal-container" class="min-w-[700px]"></div>
+      </div>
+    </div>
+
+    <footer class="text-center text-[11px] text-slate-700 py-10 mt-4">Term-IV PGP 2025-27 • Attendance saved locally</footer>
+  </main>
+
+  <!-- Course Detail Modal -->
+  <div id="course-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden flex flex-col shadow-2xl" style="animation: fadeIn 0.2s ease-out">
+        <div id="modal-header" class="p-6 border-b border-slate-800 relative shrink-0"></div>
+        <div class="overflow-y-auto p-6 scrollbar-hide" id="modal-body"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const COURSES_DATA = {"termStart": "2026-06-15", "termEnd": "2026-08-08", "cfaDate": "2026-08-19", "courses": [{"code": "CCR A", "name": "Communicating Corporate Reputation", "faculty": "Prof. Shivani Sharma", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-25", "endDate": "2026-08-05", "totalSessions": 10, "sessions": [{"date": "2026-06-25", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-27", "day": "Saturday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-07-02", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-18", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-08-03", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-08-05", "day": "Wednesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 10}]}, {"code": "ACEL A", "name": "Advanced Corporate and Economic Laws", "faculty": "Prof. I. Sridhar", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-07-30", "totalSessions": 10, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-18", "day": "Thursday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-30", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 4}, {"date": "2026-07-02", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 6}, {"date": "2026-07-21", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-28", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-30", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 10}]}, {"code": "GAIB", "name": "Generative Artificial Intelligence in Business", "faculty": "Prof. Prabin K Panigrahi", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-17", "endDate": "2026-07-17", "totalSessions": 10, "sessions": [{"date": "2026-06-17", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 8}, {"date": "2026-07-13", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-15", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 10}]}, {"code": "TSB A", "name": "Technology Strategy for Business", "faculty": "Prof. Rajhans Mishra", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-15", "endDate": "2026-07-08", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-17", "day": "Wednesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-19", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-06-24", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-06-26", "day": "Friday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-06-29", "day": "Monday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-01", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 7}, {"date": "2026-07-03", "day": "Friday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-06", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-08", "day": "Wednesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 10}]}, {"code": "GAFW A", "name": "Gen AI and Future of Work", "faculty": "Prof. Kajari Mukherjee", "credits": 1, "sisterAllowed": true, "startDate": "2026-06-29", "endDate": "2026-07-09", "totalSessions": 5, "sessions": [{"date": "2026-06-29", "day": "Monday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-07-01", "day": "Wednesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}]}, {"code": "MSN", "name": "Managing Social Networks", "faculty": "Prof. Nobin Thomas", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-15", "endDate": "2026-07-24", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-07-02", "day": "Thursday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-06", "day": "Monday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-13", "day": "Monday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-16", "day": "Thursday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-20", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-201", "sessionNum": 8}, {"date": "2026-07-23", "day": "Thursday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-24", "day": "Friday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "SRC-201", "sessionNum": 10}]}, {"code": "CEDA A", "name": "Corporate Entrepreneurship In The Disruptive Age", "faculty": "Prof. Sumit Chakraborty", "credits": 3, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-08-08", "totalSessions": 15, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-07", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-14", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-18", "day": "Saturday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 10}, {"date": "2026-07-21", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 11}, {"date": "2026-07-25", "day": "Saturday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 12}, {"date": "2026-07-28", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 13}, {"date": "2026-08-04", "day": "Tuesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 14}, {"date": "2026-08-08", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 15}]}, {"code": "M&A", "name": "Mergers and Acquisitions", "faculty": "Prof. Manish Popli", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-22", "endDate": "2026-08-07", "totalSessions": 15, "sessions": [{"date": "2026-06-22", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 1}, {"date": "2026-06-24", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 2}, {"date": "2026-06-29", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-07-01", "day": "Wednesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-103", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-103", "sessionNum": 5}, {"date": "2026-07-06", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-08", "day": "Wednesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-10", "day": "Friday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-13", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 10}, {"date": "2026-07-15", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 11}, {"date": "2026-07-29", "day": "Wednesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-103", "sessionNum": 12}, {"date": "2026-07-31", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-103", "sessionNum": 13}, {"date": "2026-08-03", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 14}, {"date": "2026-08-07", "day": "Friday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 15}]}, {"code": "SS G", "name": "Strategy Simulation", "faculty": "Prof. Rotation (Surana/Dwibedy/Basu/Gunta/Sunder)", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-19", "endDate": "2026-07-20", "totalSessions": 10, "sessions": [{"date": "2026-06-19", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-22", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-06-25", "day": "Thursday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-06-29", "day": "Monday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-03", "day": "Friday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-13", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-20", "day": "Monday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-20", "day": "Monday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 10}]}], "clashes": [{"courseA": "CCR A", "courseB": "ACEL A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "CCR A", "courseB": "GAFW A", "count": 2, "rigid": false, "manageable": true}, {"courseA": "TSB A", "courseB": "SS G", "count": 1, "rigid": true, "manageable": false}, {"courseA": "GAFW A", "courseB": "M&A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "MSN", "courseB": "SS G", "count": 1, "rigid": true, "manageable": false}]};
+
+    let data = COURSES_DATA;
+    const STORAGE_KEY = 'term4_attendance_v3';
+
+    const courseColors = {
+      'CCR A': { gradient: 'from-pink-500 to-rose-500', text: 'text-pink-400', light: 'bg-pink-500/10', border: 'border-pink-500/20' },
+      'ACEL A': { gradient: 'from-blue-500 to-indigo-500', text: 'text-blue-400', light: 'bg-blue-500/10', border: 'border-blue-500/20' },
+      'GAIB': { gradient: 'from-violet-500 to-purple-500', text: 'text-violet-400', light: 'bg-violet-500/10', border: 'border-violet-500/20' },
+      'TSB A': { gradient: 'from-cyan-500 to-teal-500', text: 'text-cyan-400', light: 'bg-cyan-500/10', border: 'border-cyan-500/20' },
+      'GAFW A': { gradient: 'from-fuchsia-500 to-pink-500', text: 'text-fuchsia-400', light: 'bg-fuchsia-500/10', border: 'border-fuchsia-500/20' },
+      'MSN': { gradient: 'from-amber-500 to-orange-500', text: 'text-amber-400', light: 'bg-amber-500/10', border: 'border-amber-500/20' },
+      'CEDA A': { gradient: 'from-emerald-500 to-green-500', text: 'text-emerald-400', light: 'bg-emerald-500/10', border: 'border-emerald-500/20' },
+      'M&A': { gradient: 'from-red-500 to-rose-600', text: 'text-red-400', light: 'bg-red-500/10', border: 'border-red-500/20' },
+      'SS G': { gradient: 'from-slate-500 to-gray-500', text: 'text-slate-400', light: 'bg-slate-500/10', border: 'border-slate-500/20' },
+    };
+
+    // ─── Tabs ───
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      document.querySelector(`[data-tab="${tabName}"]`).classList.add('active');
+      if (tabName === 'courses') renderCoursesTab();
+      if (tabName === 'calendar') renderCalendarTab();
+    }
+
+    // ─── Attendance ───
+    function getAttendance() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; } catch { return {}; } }
+    function setAttendance(date, code, slot, status) {
+      const att = getAttendance();
+      const key = `${date}_${code}_${slot}`;
+      if (status == null) delete att[key]; else att[key] = status;
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(att));
+      renderHomeTab();
+      if (!document.getElementById('tab-courses').classList.contains('hidden')) renderCoursesTab();
+      if (!document.getElementById('tab-calendar').classList.contains('hidden')) renderCalendarTab();
+      if (!document.getElementById('course-modal').classList.contains('hidden')) openCourseModal(code);
+    }
+    function getStatus(date, code, slot) { return getAttendance()[`${date}_${code}_${slot}`] || null; }
+    function getCourseStats(code) {
+      const c = data.courses.find(x => x.code === code);
+      const today = new Date().toISOString().split('T')[0];
+      let present = 0, absent = 0, done = 0;
+      c.sessions.forEach(s => {
+        if (s.date <= today) {
+          done++;
+          const st = getStatus(s.date, code, s.slot);
+          if (st === 'present') present++;
+          else if (st === 'absent') absent++;
+        }
+      });
+      return { present, absent, done, total: c.sessions.length, rate: done ? Math.round((present / done) * 100) : 0 };
+    }
+    function getOverallAttendance() {
+      const today = new Date().toISOString().split('T')[0];
+      let present = 0, absent = 0, marked = 0;
+      data.courses.forEach(c => c.sessions.forEach(s => {
+        if (s.date <= today) {
+          const st = getStatus(s.date, c.code, s.slot);
+          if (st === 'present') { present++; marked++; }
+          else if (st === 'absent') { absent++; marked++; }
+        }
+      }));
+      return { present, absent, marked, rate: marked ? Math.round((present / marked) * 100) : 0 };
+    }
+    function exportAttendance() {
+      const blob = new Blob([JSON.stringify(getAttendance(), null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `attendance_${new Date().toISOString().split('T')[0]}.json`; a.click(); URL.revokeObjectURL(url);
+    }
+    function resetAttendance() { if (confirm('Reset all attendance data?')) { localStorage.removeItem(STORAGE_KEY); renderHomeTab(); renderCoursesTab(); renderCalendarTab(); } }
+
+    function attBtn(date, code, slot, compact) {
+      const st = getStatus(date, code, slot);
+      const pc = st === 'present' ? 'bg-emerald-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700';
+      const ac = st === 'absent' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700';
+      const size = compact ? 'px-2 py-1 text-[10px]' : 'px-3 py-1.5 text-xs';
+      return `
+        <div class="flex items-center gap-1">
+          <button class="${size} rounded-md font-semibold ${pc}" onclick="event.stopPropagation();setAttendance('${date}','${code}',${slot},'present')">✓</button>
+          <button class="${size} rounded-md font-semibold ${ac}" onclick="event.stopPropagation();setAttendance('${date}','${code}',${slot},'absent')">✗</button>
+          ${st ? `<button class="${size} rounded-md font-semibold bg-slate-800 text-slate-500 hover:text-slate-300" onclick="event.stopPropagation();setAttendance('${date}','${code}',${slot},null)">⌫</button>` : ''}
+        </div>`;
+    }
+
+    // ─── Clock ───
+    function updateClock() {
+      const n = new Date();
+      document.getElementById('current-date').textContent = n.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+      document.getElementById('current-time').textContent = n.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+    }
+
+    // HOME TAB
+    function renderHomeTab() {
+      const now = new Date();
+      const todayStr = now.toISOString().split('T')[0];
+      const termStart = new Date(data.termStart);
+      const termEnd = new Date(data.termEnd);
+      const cfaDate = new Date(data.cfaDate);
+
+      const totalDays = Math.ceil((termEnd - termStart) / (1000*60*60*24));
+      const elapsed = Math.ceil((now - termStart) / (1000*60*60*24));
+      const termPct = Math.max(0, Math.min(100, Math.round((elapsed / totalDays) * 100)));
+      document.getElementById('term-pct').textContent = termPct + '%';
+      document.getElementById('term-ring').style.setProperty('--progress', termPct + '%');
+      document.getElementById('term-dates').textContent = `${new Date(data.termStart).toLocaleDateString('en-IN', {month:'short', day:'numeric'})} – ${new Date(data.termEnd).toLocaleDateString('en-IN', {month:'short', day:'numeric'})}`;
+
+      const cfaTotal = Math.ceil((cfaDate - termStart) / (1000*60*60*24));
+      const cfaLeft = Math.max(0, Math.ceil((cfaDate - now) / (1000*60*60*24)));
+      const cfaPct = Math.max(0, Math.min(100, Math.round(((cfaTotal - cfaLeft) / cfaTotal) * 100)));
+      document.getElementById('cfa-days').textContent = cfaLeft;
+      document.getElementById('cfa-ring').style.setProperty('--progress', cfaPct + '%');
+
+      const sessionDates = new Set();
+      data.courses.forEach(c => c.sessions.forEach(s => sessionDates.add(s.date)));
+      let nextFree = null, freeDaysCount = 0;
+      const checkDate = new Date(now);
+      for (let i = 0; i < 60; i++) {
+        checkDate.setDate(checkDate.getDate() + 1);
+        const dStr = checkDate.toISOString().split('T')[0];
+        if (!sessionDates.has(dStr)) { nextFree = dStr; freeDaysCount = i + 1; break; }
+      }
+      document.getElementById('free-days').textContent = nextFree ? freeDaysCount : '--';
+      document.getElementById('free-date').textContent = nextFree ? new Date(nextFree).toLocaleDateString('en-IN', {weekday:'short', month:'short', day:'numeric'}) : 'No free day found';
+
+      const overall = getOverallAttendance();
+      document.getElementById('att-pct').textContent = overall.rate + '%';
+      document.getElementById('att-ring').style.setProperty('--progress', overall.rate + '%');
+      document.getElementById('att-detail').textContent = `${overall.present}/${overall.marked}`;
+
+      renderDayList('home-today-list', 'home-today-date', todayStr, 'No classes today 🎉');
+      const tmrw = new Date(now); tmrw.setDate(tmrw.getDate() + 1);
+      renderDayList('home-tmrw-list', 'home-tmrw-date', tmrw.toISOString().split('T')[0], 'No classes tomorrow');
+
+      const progressEl = document.getElementById('home-progress-list');
+      progressEl.innerHTML = data.courses.map(c => {
+        const stats = getCourseStats(c.code);
+        const col = courseColors[c.code];
+        const donePct = Math.round((stats.done / stats.total) * 100);
+        return `
+        <div class="flex items-center gap-3">
+          <div class="w-20 shrink-0">
+            <div class="text-xs font-bold ${col.text}">${c.code}</div>
+            <div class="text-[10px] text-slate-500">${stats.done}/${stats.total} done</div>
+          </div>
+          <div class="flex-1 h-2.5 bg-slate-800 rounded-full overflow-hidden">
+            <div class="h-full bg-gradient-to-r ${col.gradient} rounded-full transition-all duration-500" style="width:${donePct}%"></div>
+          </div>
+          <div class="w-12 text-right shrink-0"><div class="text-xs font-bold text-white">${donePct}%</div></div>
+          <button onclick="switchTab('courses'); setTimeout(()=>openCourseModal('${c.code}'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>
+        </div>`;
+      }).join('');
+    }
+
+    function renderDayList(listId, dateId, dateStr, emptyMsg) {
+      const list = [];
+      data.courses.forEach(c => c.sessions.forEach(s => { if (s.date === dateStr) list.push({ ...s, course: c }); }));
+      list.sort((a, b) => a.slot - b.slot);
+      document.getElementById(dateId).textContent = new Date(dateStr).toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
+      const el = document.getElementById(listId);
+      if (!list.length) { el.innerHTML = `<div class="text-sm text-slate-500 text-center py-6">${emptyMsg}</div>`; return; }
+      el.innerHTML = list.map(s => {
+        const col = courseColors[s.course.code];
+        const st = getStatus(s.date, s.course.code, s.slot);
+        const stBadge = st === 'present' ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-400 font-medium">Present</span>' :
+                        st === 'absent' ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-medium">Absent</span>' :
+                        '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400">Not marked</span>';
+        return `
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800/60">
+          <div class="w-11 h-11 rounded-lg bg-gradient-to-br ${col.gradient} flex flex-col items-center justify-center text-white shrink-0">
+            <span class="text-[9px] font-bold leading-none">${s.time.split(' ')[0]}</span>
+            <span class="text-[9px] opacity-80 leading-none">${s.time.split(' ')[1]}</span>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2">
+              <span class="font-semibold text-sm text-white truncate">${s.course.name}</span>
+              ${stBadge}
+            </div>
+            <div class="text-xs text-slate-500 mt-0.5">${s.course.faculty} • ${s.classroom}</div>
+          </div>
+          <div class="shrink-0">${attBtn(s.date, s.course.code, s.slot, true)}</div>
+        </div>`;
+      }).join('');
+    }
+
+    // COURSES TAB
+    function renderCoursesTab() {
+      const el = document.getElementById('courses-grid');
+      el.innerHTML = data.courses.map(c => {
+        const col = courseColors[c.code];
+        const stats = getCourseStats(c.code);
+        const donePct = Math.round((stats.done / stats.total) * 100);
+        return `
+        <div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal('${c.code}')">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r ${col.gradient}"></div>
+          <div class="flex justify-between items-start mb-3">
+            <span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-300 tracking-wide">${c.code}</span>
+            <span class="text-lg font-bold ${col.text}">${c.credits}cr</span>
+          </div>
+          <h3 class="font-bold text-white text-base leading-snug mb-1">${c.name}</h3>
+          <p class="text-xs text-slate-400 mb-4">${c.faculty}</p>
+          <div class="flex items-center justify-between text-xs mb-1.5">
+            <span class="text-slate-500">Classes Done</span>
+            <span class="font-semibold text-white">${stats.done}/${stats.total}</span>
+          </div>
+          <div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-4">
+            <div class="h-full bg-gradient-to-r ${col.gradient} rounded-full transition-all duration-500" style="width:${donePct}%"></div>
+          </div>
+          <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-slate-500">Attendance</span>
+              <span class="text-xs font-bold ${stats.rate >= 75 ? 'text-emerald-400' : stats.rate >= 50 ? 'text-amber-400' : 'text-rose-400'}">${stats.rate}%</span>
+            </div>
+            <span class="text-[10px] px-2 py-0.5 rounded-full ${stats.present > 0 ? col.light + ' ' + col.text + ' ' + col.border : 'bg-slate-800 text-slate-500'} border">${stats.present} Present</span>
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    // CALENDAR TAB
+    function renderCalendarTab() {
+      const container = document.getElementById('cal-container');
+      const sessionMap = {};
+      data.courses.forEach(c => c.sessions.forEach(s => {
+        if (!sessionMap[s.date]) sessionMap[s.date] = [];
+        sessionMap[s.date].push({ ...s, course: c });
+      }));
+
+      const months = [
+        { year: 2026, month: 5, label: 'June 2026' },
+        { year: 2026, month: 6, label: 'July 2026' },
+        { year: 2026, month: 7, label: 'August 2026' },
+      ];
+
+      let html = '<div class="space-y-8">';
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      months.forEach(({ year, month, label }) => {
+        const firstDay = new Date(year, month, 1);
+        const daysInMonth = new Date(year, month + 1, 0).getDate();
+        const startOffset = firstDay.getDay();
+
+        html += `<div><h3 class="text-sm font-bold text-slate-300 mb-3">${label}</h3><div class="grid grid-cols-7 gap-1">`;
+        dayNames.forEach(d => html += `<div class="text-[10px] font-semibold text-slate-500 text-center py-1">${d}</div>`);
+        for (let i = 0; i < startOffset; i++) html += `<div></div>`;
+        for (let d = 1; d <= daysInMonth; d++) {
+          const dateStr = `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+          const sessions = sessionMap[dateStr] || [];
+          const isToday = dateStr === todayStr;
+          const isPast = dateStr < todayStr;
+          let cellClass = 'min-h-[72px] rounded-lg p-1.5 border ';
+          if (isToday) cellClass += 'bg-indigo-500/10 border-indigo-500/30';
+          else if (isPast) cellClass += 'bg-slate-900/40 border-slate-800/40 opacity-60';
+          else cellClass += 'bg-slate-900/20 border-slate-800/30';
+
+          html += `<div class="${cellClass}"><div class="text-[10px] font-bold ${isToday ? 'text-indigo-400' : 'text-slate-500'} mb-1">${d}</div>`;
+          sessions.forEach(s => {
+            const col = courseColors[s.course.code];
+            const st = getStatus(s.date, s.course.code, s.slot);
+            const dot = st === 'present' ? '🟢' : st === 'absent' ? '🔴' : '⚪';
+            html += `<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ${col.gradient} text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal('${s.course.code}')" title="${s.course.name} | ${s.time}">${dot} ${s.course.code}</div>`;
+          });
+          html += `</div>`;
+        }
+        html += `</div></div>`;
+      });
+      html += '</div>';
+      container.innerHTML = html;
+    }
+
+    // COURSE MODAL
+    function openCourseModal(code) {
+      const c = data.courses.find(x => x.code === code);
+      const col = courseColors[code];
+      const stats = getCourseStats(code);
+      const todayStr = new Date().toISOString().split('T')[0];
+
+      document.getElementById('modal-header').innerHTML = `
+        <button onclick="closeModal()" class="absolute top-4 right-4 w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center text-lg">&times;</button>
+        <div class="flex items-start gap-4">
+          <div class="w-14 h-14 rounded-xl bg-gradient-to-br ${col.gradient} flex items-center justify-center text-white font-bold text-xl shrink-0">${code.split(' ')[0]}</div>
+          <div>
+            <h2 class="text-xl font-bold text-white">${c.name}</h2>
+            <p class="text-sm text-slate-400 mt-0.5">${c.faculty}</p>
+            <div class="flex items-center gap-3 mt-2 flex-wrap">
+              <span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">${c.credits} Credits</span>
+              <span class="text-xs px-2 py-0.5 rounded ${c.sisterAllowed ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400'}">${c.sisterAllowed ? 'Sister Allowed' : 'No Sister'}</span>
+              <span class="text-xs text-slate-500">${new Date(c.startDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'})} – ${new Date(c.endDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'})}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-5 grid grid-cols-4 gap-3">
+          <div class="bg-slate-800/50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-white">${stats.total}</div><div class="text-[10px] text-slate-500">Total</div></div>
+          <div class="bg-slate-800/50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-white">${stats.done}</div><div class="text-[10px] text-slate-500">Done</div></div>
+          <div class="bg-slate-800/50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-emerald-400">${stats.present}</div><div class="text-[10px] text-slate-500">Present</div></div>
+          <div class="bg-slate-800/50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-rose-400">${stats.absent}</div><div class="text-[10px] text-slate-500">Absent</div></div>
+        </div>
+      `;
+
+      // Build session rows with back-to-back detection
+      let rowsHtml = '';
+      for (let i = 0; i < c.sessions.length; i++) {
+        const s = c.sessions[i];
+        const prev = i > 0 ? c.sessions[i - 1] : null;
+        const isBackToBack = prev && prev.date === s.date && Math.abs(prev.slot - s.slot) <= 1;
+        const st = getStatus(s.date, code, s.slot);
+        const isPast = s.date < todayStr;
+        const isToday = s.date === todayStr;
+        const statusHtml = st === 'present'
+          ? '<div class="flex items-center gap-1.5 text-emerald-400 font-semibold text-sm"><span class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">✓</span> Present</div>'
+          : st === 'absent'
+          ? '<div class="flex items-center gap-1.5 text-rose-400 font-semibold text-sm"><span class="w-5 h-5 rounded-full bg-rose-500/20 flex items-center justify-center text-xs">✗</span> Absent</div>'
+          : '<div class="flex items-center gap-1.5 text-slate-500 text-sm"><span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-xs">—</span> Not marked</div>';
+
+        const btbClass = isBackToBack ? 'back-to-back' : '';
+        const btbBadge = isBackToBack ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 ml-2">Back-to-back</span>' : '';
+
+        rowsHtml += `
+        <div class="session-row flex items-center gap-4 p-3 rounded-xl ${isToday ? 'bg-indigo-500/5 border border-indigo-500/20' : 'border-b border-slate-800/50'} ${isPast && !st ? 'opacity-60' : ''} ${btbClass}">
+          <div class="w-14 text-center shrink-0">
+            <div class="text-xs font-bold text-white">Session ${s.sessionNum}</div>
+            <div class="text-[10px] text-slate-500">${s.day.slice(0,3)}</div>
+          </div>
+          <div class="w-20 shrink-0">
+            <div class="text-sm font-semibold text-white">${new Date(s.date).toLocaleDateString('en-IN', {month:'short', day:'numeric'})}</div>
+            <div class="text-xs text-slate-500">${s.time}</div>
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="text-xs text-slate-500">${s.classroom} ${btbBadge}</div>
+          </div>
+          <div class="shrink-0 w-28 flex justify-end">${statusHtml}</div>
+          <div class="shrink-0">${attBtn(s.date, code, s.slot, true)}</div>
+        </div>`;
+      }
+
+      document.getElementById('modal-body').innerHTML = `<div class="space-y-1">${rowsHtml}</div>`;
+      document.getElementById('course-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+      document.getElementById('course-modal').classList.add('hidden');
+      document.body.style.overflow = '';
+    }
+
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+    // Init
+    setInterval(updateClock, 30000);
+    updateClock();
+    renderHomeTab();
+  </script>
+</body>
+</html>

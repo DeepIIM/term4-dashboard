@@ -1,0 +1,29 @@
+name: Daily Course Reminder
+
+on:
+  schedule:
+    # Runs at 15:30 UTC every day = 21:00 IST
+    - cron: '30 15 * * *'
+  workflow_dispatch:  # Allow manual trigger for testing
+
+jobs:
+  send-reminder:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      
+      - name: Install dependencies
+        run: pip install resend requests
+      
+      - name: Send reminder email
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          EMAIL_TO: ${{ secrets.EMAIL_TO }}
+        run: python scripts/send_reminder.py
