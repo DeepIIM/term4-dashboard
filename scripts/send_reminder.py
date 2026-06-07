@@ -25,7 +25,7 @@ except ImportError:
 
 def load_courses():
     script_dir = Path(__file__).parent.resolve()
-    json_path = script_dir.parent / "dashboard" / "courses.json"
+    json_path = script_dir.parent / "courses.json"
     with open(json_path, "r", encoding="utf-8") as f:
         return json.load(f)
 
