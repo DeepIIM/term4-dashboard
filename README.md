@@ -8,8 +8,8 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 
 | Component | Description |
 |---|---|
-| `dashboard/index.html` | Dark-themed web dashboard with calendar, course cards, clash report |
-| `dashboard/courses.json` | Your extracted timetable data (9 courses, 95 sessions) |
+| `index.html` | Dark-themed web dashboard with calendar, course cards, clash report |
+| `courses.json` | Your extracted timetable data (9 courses, 95 sessions) |
 | `scripts/send_reminder.py` | Sends nightly HTML email with tomorrow's classes |
 | `.github/workflows/daily-reminder.yml` | GitHub Actions cron — runs daily at 21:00 IST |
 
@@ -47,7 +47,7 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 1. Push this repo to GitHub
 2. Go to **Settings → Pages**
 3. Source: **Deploy from a branch** → Select `main` → Folder `/ (root)`
-4. Your dashboard will be live at `https://yourusername.github.io/repo-name/dashboard/`
+4. Your dashboard will be live at `https://yourusername.github.io/repo-name/`
 
 ### 3. Configure GitHub Secrets (for Email)
 
@@ -123,3 +123,9 @@ The dashboard includes a built-in attendance tracker:
 ---
 
 *Built for PGP 2025-27 Term-IV*
+
+---
+
+## Privacy Note
+
+This repo is public. If you prefer to hide your git author email from commit history, go to **Settings → Change visibility → Private**.

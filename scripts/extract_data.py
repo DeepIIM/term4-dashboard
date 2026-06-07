@@ -4,9 +4,9 @@ import json
 from datetime import datetime
 from collections import defaultdict
 
-# File paths
-excel_file = r"C:/Users/dknun/Downloads/Course selection/docs/Term-IV Time Table (PGP 2025-27 batch) AY 2026-27.xlsx"
-output_file = r"C:/Users/dknun/Downloads/Course selection/dashboard/courses.json"
+# File paths (relative to repo root)
+excel_file = r"./docs/Term-IV Time Table (PGP 2025-27 batch) AY 2026-27.xlsx"
+output_file = r"./courses.json"
 
 # User's final courses with metadata
 user_courses = {
