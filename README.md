@@ -1,6 +1,6 @@
 # Term-IV Course Dashboard + Email Reminders
 
-Dark-themed personal dashboard + automated nightly email reminders for your Term-IV schedule.
+Dark-themed personal dashboard + automated nightly email reminders for your Term-IV schedule. Now with **clash resolution suggestions** and **customizable course bundles** for you and your friends.
 
 ---
 
@@ -8,9 +8,10 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 
 | Component | Description |
 |---|---|
-| `index.html` | Dark-themed web dashboard with calendar, course cards, clash report |
-| `courses.json` | Your extracted timetable data (9 courses, 95 sessions) |
-| `scripts/send_reminder.py` | Sends nightly HTML email with tomorrow's classes |
+| `index.html` | Dark-themed web dashboard with calendar, course cards, clash report, course picker |
+| `courses.json` | Your extracted timetable data (9 courses, 95 sessions) with sister section data |
+| `all_courses.json` | Full timetable data for ALL 105 course-sections (for course picker) |
+| `scripts/send_reminder.py` | Sends nightly HTML email with tomorrow's schedule + clash suggestions |
 | `.github/workflows/daily-reminder.yml` | GitHub Actions cron — runs daily at 21:00 IST |
 
 ---
@@ -29,7 +30,36 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 | M&A | Mergers and Acquisitions | 3 | Aug 7 |
 | SS-G | Strategy Simulation | 3 | Jul 20 |
 
-**Clashes:** 5 total — 4 manageable, 1 rigid (MSN × SS-G)
+**Clashes:** 5 total — 4 manageable (sister section workaround), 1 rigid (MSN × SS-G)
+
+---
+
+## Features
+
+### Dashboard
+- **Live clock & date**
+- **Term progress bar** — visual % of term complete
+- **Today's / Tomorrow's schedule** — with clash detection and sister section suggestions
+- **Course cards** — progress bars, faculty, credits, sister section status, attendance %
+- **Clash resolution** — when clashes detected, dashboard suggests attending sister section (e.g., "Attend TSB-B instead")
+- **Weekly calendar** — visual grid with color-coded blocks + attendance dots + clash warnings
+- **Full timetable** — sortable table of all sessions with attendance toggle buttons
+- **Attendance tracker** — mark any session as Present ✓ / Absent ✗. Persisted in browser localStorage
+- **Export attendance** — download your attendance data as JSON
+- **CFA countdown** — days left until Aug 19 exam
+- **Mobile responsive** — works on phone browsers
+
+### Customizable Bundle (For Friends)
+- Click **⚙️ Bundle** in the navbar
+- Select any courses from the full Term-IV catalog
+- Dashboard instantly updates to your selected courses
+- Attendance data is separate per bundle (no overwriting)
+- **Reset to Default** anytime
+
+### Email Reminders
+- Daily at 21:00 IST, get an email with tomorrow's schedule
+- **Clash warnings** with sister section suggestions
+- **Rigid clash alerts** when no workaround exists
 
 ---
 
@@ -61,6 +91,37 @@ Done! The GitHub Actions workflow will run every day at 21:00 IST and email you 
 
 ---
 
+## Friend Setup Guide
+
+Want a friend to use this dashboard for their own courses? Here's how:
+
+### Option A: Share the Live Dashboard (No Email)
+
+1. Share your GitHub Pages URL with them
+2. They click **⚙️ Bundle** and select their own courses
+3. Their selections are saved in their browser only
+4. They get their own timetable, attendance tracking, etc.
+
+> **Note:** The course picker needs the dashboard to be hosted (not opened via `file://`). If running locally, use `python -m http.server` and open `localhost:8000`.
+
+### Option B: Full Setup With Email Reminders
+
+1. **Friend forks this repo** on GitHub
+2. They go to the live dashboard (their fork's GitHub Pages URL)
+3. They click **⚙️ Bundle** → select their courses → **Save Bundle**
+4. They export their bundle: open browser DevTools → Console → run:
+   ```js
+   copy(localStorage.getItem('term4_bundle'))
+   ```
+   Paste the copied JSON into a file named `courses.json` in their fork
+5. They add their own GitHub Secrets:
+   - `RESEND_API_KEY` — their Resend API key
+   - `EMAIL_TO` — their email address
+6. They enable GitHub Actions in their fork
+7. Daily emails now work for their bundle!
+
+---
+
 ## Manual Testing
 
 Want to test the email before waiting for the cron?
@@ -77,22 +138,6 @@ python scripts/send_reminder.py
 Or trigger the workflow manually:
 1. Go to **Actions → Daily Course Reminder**
 2. Click **Run workflow**
-
----
-
-## Dashboard Features
-
-- **Live clock & date**
-- **Term progress bar** — visual % of term complete
-- **Today's schedule** — card view of today's classes with attendance buttons
-- **Course cards** — progress bars, faculty, credits, sister section status, **attendance % per course**
-- **Clash report** — rigid clashes in red, manageable in yellow
-- **Weekly calendar** — visual grid with color-coded blocks + attendance dots
-- **Full timetable** — sortable table of all 95 sessions with **attendance toggle buttons**
-- **Attendance tracker** — mark any session as Present ✓ / Absent ✗. Persisted in browser localStorage
-- **Export attendance** — download your attendance data as JSON
-- **CFA countdown** — days left until Aug 19 exam
-- **Mobile responsive** — works on phone browsers
 
 ---
 
@@ -118,7 +163,7 @@ The dashboard includes a built-in attendance tracker:
 6. **Export** your attendance data as JSON anytime
 7. **Reset** clears all attendance history
 
-> All attendance data is stored in your browser's `localStorage` — it stays private and persists between visits.
+> All attendance data is stored in your browser's `localStorage` — it stays private and persists between visits. Each course bundle gets its own storage key, so friends using the same computer won't overwrite each other's data.
 
 ---
 

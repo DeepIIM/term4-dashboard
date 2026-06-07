@@ -1,4 +1,38 @@
-<!DOCTYPE html>
+"""
+Builds the final index.html by embedding courses.json data and adding
+clash suggestions + course picker features.
+"""
+
+import json
+
+# Load updated courses.json (with sister sections)
+with open('courses.json', 'r', encoding='utf-8') as f:
+    courses_data = json.load(f)
+
+# Generate dynamic course colors for any possible course code
+color_palettes = [
+    ('from-pink-500 to-rose-500', 'text-pink-400', 'bg-pink-500/10', 'border-pink-500/20'),
+    ('from-blue-500 to-indigo-500', 'text-blue-400', 'bg-blue-500/10', 'border-blue-500/20'),
+    ('from-violet-500 to-purple-500', 'text-violet-400', 'bg-violet-500/10', 'border-violet-500/20'),
+    ('from-cyan-500 to-teal-500', 'text-cyan-400', 'bg-cyan-500/10', 'border-cyan-500/20'),
+    ('from-fuchsia-500 to-pink-500', 'text-fuchsia-400', 'bg-fuchsia-500/10', 'border-fuchsia-500/20'),
+    ('from-amber-500 to-orange-500', 'text-amber-400', 'bg-amber-500/10', 'border-amber-500/20'),
+    ('from-emerald-500 to-green-500', 'text-emerald-400', 'bg-emerald-500/10', 'border-emerald-500/20'),
+    ('from-red-500 to-rose-600', 'text-red-400', 'bg-red-500/10', 'border-red-500/20'),
+    ('from-slate-500 to-gray-500', 'text-slate-400', 'bg-slate-500/10', 'border-slate-500/20'),
+    ('from-lime-500 to-green-500', 'text-lime-400', 'bg-lime-500/10', 'border-lime-500/20'),
+    ('from-sky-500 to-blue-500', 'text-sky-400', 'bg-sky-500/10', 'border-sky-500/20'),
+    ('from-yellow-500 to-amber-500', 'text-yellow-400', 'bg-yellow-500/10', 'border-yellow-500/20'),
+    ('from-indigo-500 to-violet-500', 'text-indigo-400', 'bg-indigo-500/10', 'border-indigo-500/20'),
+    ('from-orange-500 to-red-500', 'text-orange-400', 'bg-orange-500/10', 'border-orange-500/20'),
+    ('from-teal-500 to-cyan-500', 'text-teal-400', 'bg-teal-500/10', 'border-teal-500/20'),
+]
+
+courses_json_str = json.dumps(courses_data, ensure_ascii=False)
+color_palettes_json = json.dumps(color_palettes)
+
+# Template parts
+head = '''<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -39,7 +73,9 @@
   </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen">
+'''
 
+navbar = '''
   <!-- Navbar -->
   <nav class="glass sticky top-0 z-40 border-b border-slate-800">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -68,7 +104,9 @@
       </div>
     </div>
   </nav>
+'''
 
+main = '''
   <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- HOME TAB -->
@@ -149,7 +187,9 @@
 
     <footer class="text-center text-[11px] text-slate-700 py-10 mt-4">Term-IV PGP 2025-27 &bull; Attendance saved locally</footer>
   </main>
+'''
 
+modals = '''
   <!-- Course Detail Modal -->
   <div id="course-modal" class="fixed inset-0 z-50 hidden">
     <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeModal()"></div>
@@ -190,9 +230,11 @@
       </div>
     </div>
   </div>
+'''
 
+script_start = '''
   <script>
-    const DEFAULT_DATA = {"termStart": "2026-06-15", "termEnd": "2026-08-08", "cfaDate": "2026-08-19", "courses": [{"code": "CCR A", "name": "Communicating Corporate Reputation", "faculty": "Prof. Shivani Sharma", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-25", "endDate": "2026-08-05", "totalSessions": 10, "sessions": [{"date": "2026-06-25", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-27", "day": "Saturday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-07-02", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-18", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-08-03", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-08-05", "day": "Wednesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 10}], "sisterSection": {"code": "CCR B", "name": "Communicating Corporate Reputation", "faculty": "Prof. Shivani Sharma", "sessions": [{"date": "2026-06-25", "day": "Thursday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-27", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-07-02", "day": "Thursday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-18", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-08-03", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-08-05", "day": "Wednesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 10}]}}, {"code": "ACEL A", "name": "Advanced Corporate and Economic Laws", "faculty": "Prof. I. Sridhar", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-07-30", "totalSessions": 10, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-18", "day": "Thursday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-30", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-02", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-21", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-28", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-30", "day": "Thursday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 10}], "sisterSection": {"code": "ACEL B", "name": "Advanced Corporate and Economic Laws", "faculty": "Prof. I. Sridhar", "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-18", "day": "Thursday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-30", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-02", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-21", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-28", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-30", "day": "Thursday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 10}]}}, {"code": "GAIB", "name": "Generative Artificial Intelligence in Business", "faculty": "Prof. Prabin K Panigrahi", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-17", "endDate": "2026-07-17", "totalSessions": 10, "sessions": [{"date": "2026-06-17", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-06-26", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-01", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-03", "day": "Friday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 7}, {"date": "2026-07-13", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-15", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-17", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 10}]}, {"code": "TSB A", "name": "Technology Strategy for Business", "faculty": "Prof. Rajhans Mishra", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-15", "endDate": "2026-07-08", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-17", "day": "Wednesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-19", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-22", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 4}, {"date": "2026-06-24", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-06-26", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 6}, {"date": "2026-06-29", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-03", "day": "Friday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 8}, {"date": "2026-07-06", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-08", "day": "Wednesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 10}], "sisterSection": {"code": "TSB B", "name": "Technology Strategy for Business", "faculty": "Prof. Rajhans Mishra", "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-17", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-19", "day": "Friday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-22", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 4}, {"date": "2026-06-24", "day": "Wednesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-06-26", "day": "Friday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 6}, {"date": "2026-06-29", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-03", "day": "Friday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 8}, {"date": "2026-07-06", "day": "Monday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-08", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 10}]}}, {"code": "GAFW A", "name": "Gen AI and Future of Work", "faculty": "Prof. Kajari Mukherjee", "credits": 1, "sisterAllowed": true, "startDate": "2026-06-29", "endDate": "2026-07-09", "totalSessions": 5, "sessions": [{"date": "2026-06-29", "day": "Monday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-01", "day": "Wednesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 5}], "sisterSection": {"code": "GAFW B", "name": "Gen AI and Future of Work", "faculty": "Prof. Kajari Mukherjee", "sessions": [{"date": "2026-06-29", "day": "Monday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-01", "day": "Wednesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 5}]}}, {"code": "MSN", "name": "Managing Social Networks", "faculty": "Prof. Nobin Thomas", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-15", "endDate": "2026-07-24", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-02", "day": "Thursday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-08", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 5}, {"date": "2026-07-15", "day": "Wednesday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-17", "day": "Friday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-20", "day": "Monday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 8}, {"date": "2026-07-23", "day": "Thursday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-203", "sessionNum": 9}, {"date": "2026-07-24", "day": "Friday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-201", "sessionNum": 10}]}, {"code": "CEDA A", "name": "Corporate Entrepreneurship In The Disruptive Age", "faculty": "Prof. Sumit Chakraborty", "credits": 3, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-08-08", "totalSessions": 15, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-07", "day": "Tuesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-14", "day": "Tuesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-18", "day": "Saturday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-103", "sessionNum": 10}, {"date": "2026-07-23", "day": "Thursday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 11}, {"date": "2026-07-25", "day": "Saturday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 12}, {"date": "2026-07-30", "day": "Thursday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 13}, {"date": "2026-08-04", "day": "Tuesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 14}, {"date": "2026-08-08", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 15}], "sisterSection": {"code": "CEDA B", "name": "Corporate Entrepreneurship In The Disruptive Age", "faculty": "Prof. Sumit Chakraborty", "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-07", "day": "Tuesday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-14", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-18", "day": "Saturday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 10}, {"date": "2026-07-23", "day": "Thursday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 11}, {"date": "2026-07-25", "day": "Saturday", "slot": 3, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 12}, {"date": "2026-07-30", "day": "Thursday", "slot": 10, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 13}, {"date": "2026-08-04", "day": "Tuesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 14}, {"date": "2026-08-08", "day": "Saturday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 15}]}}, {"code": "M&A", "name": "Mergers and Acquisitions", "faculty": "Prof. Manish Popli", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-22", "endDate": "2026-08-07", "totalSessions": 15, "sessions": [{"date": "2026-06-22", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-24", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-06-29", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-01", "day": "Wednesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-06", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-08", "day": "Wednesday", "slot": 9, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-10", "day": "Friday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 9}, {"date": "2026-07-13", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 10}, {"date": "2026-07-15", "day": "Wednesday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 11}, {"date": "2026-07-29", "day": "Wednesday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 12}, {"date": "2026-07-31", "day": "Friday", "slot": 2, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 13}, {"date": "2026-08-03", "day": "Monday", "slot": 4, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 14}, {"date": "2026-08-07", "day": "Friday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 15}]}, {"code": "SS G", "name": "Strategy Simulation", "faculty": "Prof. Rotation (Surana/Dwibedy/Basu/Gunta/Sunder)", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-19", "endDate": "2026-07-20", "totalSessions": 10, "sessions": [{"date": "2026-06-19", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-22", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-06-25", "day": "Thursday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-06-29", "day": "Monday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-03", "day": "Friday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "G103", "sessionNum": 7}, {"date": "2026-07-13", "day": "Monday", "slot": 8, "time": "5:30 pm - 6:45 pm", "classroom": "G103", "sessionNum": 8}, {"date": "2026-07-20", "day": "Monday", "slot": 6, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-20", "day": "Monday", "slot": 7, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 10}]}], "clashes": [{"courseA": "CCR A", "courseB": "ACEL A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "CCR A", "courseB": "GAFW A", "count": 2, "rigid": false, "manageable": true}, {"courseA": "TSB A", "courseB": "SS G", "count": 1, "rigid": false, "manageable": true}, {"courseA": "GAFW A", "courseB": "M&A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "MSN", "courseB": "SS G", "count": 1, "rigid": true, "manageable": false}]};
+    const DEFAULT_DATA = ''' + courses_json_str + ''';
     let data = DEFAULT_DATA;
     let allCoursesData = null;
     let selectedBundle = [];
@@ -224,7 +266,7 @@
     // Dynamic color assignment
     function getCourseColor(code) {
       const idx = data.courses.findIndex(c => c.code === code);
-      const palettes = [["from-pink-500 to-rose-500", "text-pink-400", "bg-pink-500/10", "border-pink-500/20"], ["from-blue-500 to-indigo-500", "text-blue-400", "bg-blue-500/10", "border-blue-500/20"], ["from-violet-500 to-purple-500", "text-violet-400", "bg-violet-500/10", "border-violet-500/20"], ["from-cyan-500 to-teal-500", "text-cyan-400", "bg-cyan-500/10", "border-cyan-500/20"], ["from-fuchsia-500 to-pink-500", "text-fuchsia-400", "bg-fuchsia-500/10", "border-fuchsia-500/20"], ["from-amber-500 to-orange-500", "text-amber-400", "bg-amber-500/10", "border-amber-500/20"], ["from-emerald-500 to-green-500", "text-emerald-400", "bg-emerald-500/10", "border-emerald-500/20"], ["from-red-500 to-rose-600", "text-red-400", "bg-red-500/10", "border-red-500/20"], ["from-slate-500 to-gray-500", "text-slate-400", "bg-slate-500/10", "border-slate-500/20"], ["from-lime-500 to-green-500", "text-lime-400", "bg-lime-500/10", "border-lime-500/20"], ["from-sky-500 to-blue-500", "text-sky-400", "bg-sky-500/10", "border-sky-500/20"], ["from-yellow-500 to-amber-500", "text-yellow-400", "bg-yellow-500/10", "border-yellow-500/20"], ["from-indigo-500 to-violet-500", "text-indigo-400", "bg-indigo-500/10", "border-indigo-500/20"], ["from-orange-500 to-red-500", "text-orange-400", "bg-orange-500/10", "border-orange-500/20"], ["from-teal-500 to-cyan-500", "text-teal-400", "bg-teal-500/10", "border-teal-500/20"]];
+      const palettes = ''' + color_palettes_json + ''';
       const p = palettes[idx % palettes.length];
       return { gradient: p[0], text: p[1], light: p[2], border: p[3] };
     }
@@ -306,12 +348,14 @@
       const ac = st === 'absent' ? 'bg-rose-600 text-white' : 'bg-slate-800 text-slate-400 hover:bg-slate-700';
       const size = compact ? 'px-2 py-1 text-[10px]' : 'px-3 py-1.5 text-xs';
       return '<div class="flex items-center gap-1">' +
-        '<button class="' + size + ' rounded-md font-semibold ' + pc + '" onclick="event.stopPropagation();setAttendance('' + date + '','' + code + '',' + slot + ','present')">&#10003;</button>' +
-        '<button class="' + size + ' rounded-md font-semibold ' + ac + '" onclick="event.stopPropagation();setAttendance('' + date + '','' + code + '',' + slot + ','absent')">&#10007;</button>' +
-        (st ? '<button class="' + size + ' rounded-md font-semibold bg-slate-800 text-slate-500 hover:text-slate-300" onclick="event.stopPropagation();setAttendance('' + date + '','' + code + '',' + slot + ',null)">&#9003;</button>' : '') +
+        '<button class="' + size + ' rounded-md font-semibold ' + pc + '" onclick="event.stopPropagation();setAttendance(\'' + date + '\',\'' + code + '\',' + slot + ',\'present\')">&#10003;</button>' +
+        '<button class="' + size + ' rounded-md font-semibold ' + ac + '" onclick="event.stopPropagation();setAttendance(\'' + date + '\',\'' + code + '\',' + slot + ',\'absent\')">&#10007;</button>' +
+        (st ? '<button class="' + size + ' rounded-md font-semibold bg-slate-800 text-slate-500 hover:text-slate-300" onclick="event.stopPropagation();setAttendance(\'' + date + '\',\'' + code + '\',' + slot + ',null)">&#9003;</button>' : '') +
         '</div>';
     }
+'''
 
+clash_js = '''
     // ─── Clash Detection ───
     function findClashes(dateStr) {
       const sessions = [];
@@ -379,14 +423,18 @@
         '<span class="text-amber-200"> ' + suggestions.join(' OR ') + '</span>' +
         '</div>';
     }
+'''
 
+clock_js = '''
     // ─── Clock ───
     function updateClock() {
       const n = new Date();
       document.getElementById('current-date').textContent = n.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
       document.getElementById('current-time').textContent = n.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
     }
+'''
 
+home_tab_js = '''
     // HOME TAB
     function renderHomeTab() {
       const now = new Date();
@@ -400,7 +448,7 @@
       const termPct = Math.max(0, Math.min(100, Math.round((elapsed / totalDays) * 100)));
       document.getElementById('term-pct').textContent = termPct + '%';
       document.getElementById('term-ring').style.setProperty('--progress', termPct + '%');
-      document.getElementById('term-dates').textContent = new Date(data.termStart).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' – ' + new Date(data.termEnd).toLocaleDateString('en-IN', {month:'short', day:'numeric'});
+      document.getElementById('term-dates').textContent = new Date(data.termStart).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' \u2013 ' + new Date(data.termEnd).toLocaleDateString('en-IN', {month:'short', day:'numeric'});
 
       const cfaTotal = Math.ceil((cfaDate - termStart) / (1000*60*60*24));
       const cfaLeft = Math.max(0, Math.ceil((cfaDate - now) / (1000*60*60*24)));
@@ -443,7 +491,7 @@
             '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-500" style="width:' + donePct + '%"></div>' +
           '</div>' +
           '<div class="w-12 text-right shrink-0"><div class="text-xs font-bold text-white">' + donePct + '%</div></div>' +
-          '<button onclick="switchTab('courses'); setTimeout(()=>openCourseModal('' + c.code + ''), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>' +
+          '<button onclick="switchTab(\'courses\'); setTimeout(()=>openCourseModal(\'' + c.code + '\'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>' +
         '</div>';
       }).join('');
     }
@@ -492,7 +540,9 @@
         '</div>';
       }).join('');
     }
+'''
 
+courses_tab_js = '''
     // COURSES TAB
     function renderCoursesTab() {
       const el = document.getElementById('courses-grid');
@@ -500,7 +550,7 @@
         const col = getCourseColor(c.code);
         const stats = getCourseStats(c.code);
         const donePct = Math.round((stats.done / stats.total) * 100);
-        return '<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal('' + c.code + '')">' +
+        return '<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal(\'' + c.code + '\')">' +
           '<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r ' + col.gradient + '"></div>' +
           '<div class="flex justify-between items-start mb-3">' +
             '<span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-300 tracking-wide">' + c.code + '</span>' +
@@ -525,7 +575,9 @@
         '</div>';
       }).join('');
     }
+'''
 
+calendar_tab_js = '''
     // CALENDAR TAB
     function renderCalendarTab() {
       const container = document.getElementById('cal-container');
@@ -578,7 +630,7 @@
             const col = getCourseColor(s.course.code);
             const st = getStatus(s.date, s.course.code, s.slot);
             const dot = st === 'present' ? '&#128994;' : st === 'absent' ? '&#128308;' : '&#9898;';
-            html += '<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ' + col.gradient + ' text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal('' + s.course.code + '')" title="' + s.course.name + ' | ' + s.time + '">' + dot + ' ' + s.course.code + '</div>';
+            html += '<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ' + col.gradient + ' text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal(\'' + s.course.code + '\')" title="' + s.course.name + ' | ' + s.time + '">' + dot + ' ' + s.course.code + '</div>';
           });
           html += '</div>';
         }
@@ -587,7 +639,9 @@
       html += '</div>';
       container.innerHTML = html;
     }
+'''
 
+modal_js = '''
     // COURSE MODAL
     function openCourseModal(code) {
       const c = data.courses.find(x => x.code === code);
@@ -613,7 +667,7 @@
             '<div class="flex items-center gap-3 mt-2 flex-wrap">' +
               '<span class="text-xs px-2 py-0.5 rounded bg-slate-800 text-slate-300">' + c.credits + ' Credits</span>' +
               '<span class="text-xs px-2 py-0.5 rounded ' + (c.sisterAllowed ? 'bg-emerald-500/10 text-emerald-400' : 'bg-rose-500/10 text-rose-400') + '">' + (c.sisterAllowed ? 'Sister Allowed' : 'No Sister') + '</span>' +
-              '<span class="text-xs text-slate-500">' + new Date(c.startDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' – ' + new Date(c.endDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + '</span>' +
+              '<span class="text-xs text-slate-500">' + new Date(c.startDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' \u2013 ' + new Date(c.endDate).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + '</span>' +
             '</div>' +
             sisterHtml +
           '</div>' +
@@ -637,7 +691,7 @@
           ? '<div class="flex items-center gap-1.5 text-emerald-400 font-semibold text-sm"><span class="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center text-xs">&#10003;</span> Present</div>'
           : st === 'absent'
           ? '<div class="flex items-center gap-1.5 text-rose-400 font-semibold text-sm"><span class="w-5 h-5 rounded-full bg-rose-500/20 flex items-center justify-center text-xs">&#10007;</span> Absent</div>'
-          : '<div class="flex items-center gap-1.5 text-slate-500 text-sm"><span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-xs">—</span> Not marked</div>';
+          : '<div class="flex items-center gap-1.5 text-slate-500 text-sm"><span class="w-5 h-5 rounded-full bg-slate-700 flex items-center justify-center text-xs">\u2014</span> Not marked</div>';
 
         const btbClass = isBackToBack ? 'back-to-back' : '';
         const btbBadge = isBackToBack ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 ml-2">Back-to-back</span>' : '';
@@ -681,7 +735,9 @@
       document.getElementById('course-modal').classList.add('hidden');
       document.body.style.overflow = '';
     }
+'''
 
+bundle_picker_js = '''
     // ─── Bundle Picker ───
     async function openBundlePicker() {
       document.getElementById('bundle-modal').classList.remove('hidden');
@@ -720,7 +776,7 @@
           '</div>' +
           '<div class="flex gap-2 flex-wrap">' +
             courses.map(c =>
-              '<button onclick="toggleCourse('' + c.code + '')" id="picker-' + c.code + '" class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ' +
+              '<button onclick="toggleCourse(\'' + c.code + '\')" id="picker-' + c.code + '" class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ' +
               (selectedBundle.includes(c.code) ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700') + '">' +
               c.code +
               '</button>'
@@ -810,3 +866,13 @@
   </script>
 </body>
 </html>
+'''
+
+# Combine all parts
+full_html = head + navbar + main + modals + script_start + clash_js + clock_js + home_tab_js + courses_tab_js + calendar_tab_js + modal_js + bundle_picker_js
+
+with open('index.html', 'w', encoding='utf-8') as f:
+    f.write(full_html)
+
+print("Built index.html successfully")
+print(f"File size: {len(full_html):,} bytes")

@@ -93,7 +93,94 @@
           "classroom": "F-103",
           "sessionNum": 10
         }
-      ]
+      ],
+      "sisterSection": {
+        "code": "CCR B",
+        "name": "Communicating Corporate Reputation",
+        "faculty": "Prof. Shivani Sharma",
+        "sessions": [
+          {
+            "date": "2026-06-25",
+            "day": "Thursday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-06-27",
+            "day": "Saturday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 2
+          },
+          {
+            "date": "2026-07-02",
+            "day": "Thursday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 3
+          },
+          {
+            "date": "2026-07-07",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "SRC-201",
+            "sessionNum": 4
+          },
+          {
+            "date": "2026-07-09",
+            "day": "Thursday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 5
+          },
+          {
+            "date": "2026-07-16",
+            "day": "Thursday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 6
+          },
+          {
+            "date": "2026-07-18",
+            "day": "Saturday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 7
+          },
+          {
+            "date": "2026-07-23",
+            "day": "Thursday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "SRC-201",
+            "sessionNum": 8
+          },
+          {
+            "date": "2026-08-03",
+            "day": "Monday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 9
+          },
+          {
+            "date": "2026-08-05",
+            "day": "Wednesday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-103",
+            "sessionNum": 10
+          }
+        ]
+      }
     },
     {
       "code": "ACEL A",
@@ -185,7 +272,94 @@
           "classroom": "F-203",
           "sessionNum": 10
         }
-      ]
+      ],
+      "sisterSection": {
+        "code": "ACEL B",
+        "name": "Advanced Corporate and Economic Laws",
+        "faculty": "Prof. I. Sridhar",
+        "sessions": [
+          {
+            "date": "2026-06-16",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-201",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-06-18",
+            "day": "Thursday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-203",
+            "sessionNum": 2
+          },
+          {
+            "date": "2026-06-23",
+            "day": "Tuesday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-201",
+            "sessionNum": 3
+          },
+          {
+            "date": "2026-06-30",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 4
+          },
+          {
+            "date": "2026-07-02",
+            "day": "Thursday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 5
+          },
+          {
+            "date": "2026-07-16",
+            "day": "Thursday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 6
+          },
+          {
+            "date": "2026-07-21",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-201",
+            "sessionNum": 7
+          },
+          {
+            "date": "2026-07-23",
+            "day": "Thursday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 8
+          },
+          {
+            "date": "2026-07-28",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-201",
+            "sessionNum": 9
+          },
+          {
+            "date": "2026-07-30",
+            "day": "Thursday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 10
+          }
+        ]
+      }
     },
     {
       "code": "GAIB",
@@ -369,7 +543,94 @@
           "classroom": "F-201",
           "sessionNum": 10
         }
-      ]
+      ],
+      "sisterSection": {
+        "code": "TSB B",
+        "name": "Technology Strategy for Business",
+        "faculty": "Prof. Rajhans Mishra",
+        "sessions": [
+          {
+            "date": "2026-06-15",
+            "day": "Monday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-203",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-06-17",
+            "day": "Wednesday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-203",
+            "sessionNum": 2
+          },
+          {
+            "date": "2026-06-19",
+            "day": "Friday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 3
+          },
+          {
+            "date": "2026-06-22",
+            "day": "Monday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 4
+          },
+          {
+            "date": "2026-06-24",
+            "day": "Wednesday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-203",
+            "sessionNum": 5
+          },
+          {
+            "date": "2026-06-26",
+            "day": "Friday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-201",
+            "sessionNum": 6
+          },
+          {
+            "date": "2026-06-29",
+            "day": "Monday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 7
+          },
+          {
+            "date": "2026-07-03",
+            "day": "Friday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 8
+          },
+          {
+            "date": "2026-07-06",
+            "day": "Monday",
+            "slot": 10,
+            "time": "8:45 pm - 10:00 pm",
+            "classroom": "F-103",
+            "sessionNum": 9
+          },
+          {
+            "date": "2026-07-08",
+            "day": "Wednesday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 10
+          }
+        ]
+      }
     },
     {
       "code": "GAFW A",
@@ -421,7 +682,54 @@
           "classroom": "F-203",
           "sessionNum": 5
         }
-      ]
+      ],
+      "sisterSection": {
+        "code": "GAFW B",
+        "name": "Gen AI and Future of Work",
+        "faculty": "Prof. Kajari Mukherjee",
+        "sessions": [
+          {
+            "date": "2026-06-29",
+            "day": "Monday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-07-01",
+            "day": "Wednesday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-203",
+            "sessionNum": 2
+          },
+          {
+            "date": "2026-07-03",
+            "day": "Friday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 3
+          },
+          {
+            "date": "2026-07-07",
+            "day": "Tuesday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 4
+          },
+          {
+            "date": "2026-07-09",
+            "day": "Thursday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-203",
+            "sessionNum": 5
+          }
+        ]
+      }
     },
     {
       "code": "MSN",
@@ -645,7 +953,134 @@
           "classroom": "F-103",
           "sessionNum": 15
         }
-      ]
+      ],
+      "sisterSection": {
+        "code": "CEDA B",
+        "name": "Corporate Entrepreneurship In The Disruptive Age",
+        "faculty": "Prof. Sumit Chakraborty",
+        "sessions": [
+          {
+            "date": "2026-06-16",
+            "day": "Tuesday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-203",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-06-20",
+            "day": "Saturday",
+            "slot": 8,
+            "time": "5:30 pm - 6:45 pm",
+            "classroom": "F-203",
+            "sessionNum": 2
+          },
+          {
+            "date": "2026-06-23",
+            "day": "Tuesday",
+            "slot": 10,
+            "time": "8:45 pm - 10:00 pm",
+            "classroom": "F-103",
+            "sessionNum": 3
+          },
+          {
+            "date": "2026-06-27",
+            "day": "Saturday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-203",
+            "sessionNum": 4
+          },
+          {
+            "date": "2026-06-30",
+            "day": "Tuesday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-201",
+            "sessionNum": 5
+          },
+          {
+            "date": "2026-07-04",
+            "day": "Saturday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-203",
+            "sessionNum": 6
+          },
+          {
+            "date": "2026-07-07",
+            "day": "Tuesday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 7
+          },
+          {
+            "date": "2026-07-11",
+            "day": "Saturday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 8
+          },
+          {
+            "date": "2026-07-14",
+            "day": "Tuesday",
+            "slot": 9,
+            "time": "7:00 pm - 8:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 9
+          },
+          {
+            "date": "2026-07-18",
+            "day": "Saturday",
+            "slot": 7,
+            "time": "4:00 pm - 5:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 10
+          },
+          {
+            "date": "2026-07-23",
+            "day": "Thursday",
+            "slot": 10,
+            "time": "8:45 pm - 10:00 pm",
+            "classroom": "F-103",
+            "sessionNum": 11
+          },
+          {
+            "date": "2026-07-25",
+            "day": "Saturday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
+            "classroom": "F-203",
+            "sessionNum": 12
+          },
+          {
+            "date": "2026-07-30",
+            "day": "Thursday",
+            "slot": 10,
+            "time": "8:45 pm - 10:00 pm",
+            "classroom": "F-103",
+            "sessionNum": 13
+          },
+          {
+            "date": "2026-08-04",
+            "day": "Tuesday",
+            "slot": 9,
+            "time": "7:00 pm - 8:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 14
+          },
+          {
+            "date": "2026-08-08",
+            "day": "Saturday",
+            "slot": 4,
+            "time": "12 noon - 1:15 pm",
+            "classroom": "F-103",
+            "sessionNum": 15
+          }
+        ]
+      }
     },
     {
       "code": "M&A",
