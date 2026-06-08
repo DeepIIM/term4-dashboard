@@ -447,7 +447,7 @@
             '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-500" style="width:' + donePct + '%"></div>' +
           '</div>' +
           '<div class="w-12 text-right shrink-0"><div class="text-xs font-bold text-white">' + donePct + '%</div></div>' +
-          `<button onclick="switchTab('courses'); setTimeout(()=>openCourseModal('\${c.code}'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>` +
+          `<button onclick="switchTab(\'courses\'); setTimeout(()=>openCourseModal(\'' + c.code + '\'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>` +
         '</div>';
       }).join('');
     }
@@ -504,7 +504,7 @@
         const col = getCourseColor(c.code);
         const stats = getCourseStats(c.code);
         const donePct = Math.round((stats.done / stats.total) * 100);
-        return '<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal(`${c.code}`)">' +
+        return '<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal(\'' + c.code + '\')">' +
           '<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r ' + col.gradient + '"></div>' +
           '<div class="flex justify-between items-start mb-3">' +
             '<span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-300 tracking-wide">' + c.code + '</span>' +
@@ -582,7 +582,7 @@
             const col = getCourseColor(s.course.code);
             const st = getStatus(s.date, s.course.code, s.slot);
             const dot = st === 'present' ? '&#128994;' : st === 'absent' ? '&#128308;' : '&#9898;';
-            html += '<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ' + col.gradient + ' text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal(`${s.course.code}`)" title="' + s.course.name + ' | ' + s.time + '">' + dot + ' ' + s.course.code + '</div>';
+            html += '<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ' + col.gradient + ' text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal(\'' + s.course.code + '\')" title="' + s.course.name + ' | ' + s.time + '">' + dot + ' ' + s.course.code + '</div>';
           });
           html += '</div>';
         }
@@ -709,7 +709,7 @@
           '</div>' +
           '<div class="flex gap-2 flex-wrap">' +
             courses.map(c =>
-              '<button onclick="toggleCourse(`${c.code}`)" id="picker-' + c.code + '" class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ' +
+              '<button onclick="toggleCourse(\'' + c.code + '\')" id="picker-' + c.code + '" class="px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ' +
               (selectedBundle.includes(c.code) ? 'bg-indigo-500/20 border-indigo-500 text-indigo-300' : 'bg-slate-800 border-slate-700 text-slate-400 hover:bg-slate-700') + '">' +
               c.code +
               '</button>'
