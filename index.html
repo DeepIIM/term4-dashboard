@@ -173,7 +173,11 @@
           </div>
           <button onclick="closeBundlePicker()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center text-lg">&times;</button>
         </div>
-        <div class="overflow-y-auto p-6 scrollbar-hide flex-1" id="bundle-body">
+        <div class="px-6 pt-4 pb-2 shrink-0">
+          <input type="text" id="bundle-search" placeholder="Search courses (e.g. CCR, Finance, Sharma...)" oninput="filterBundlePicker()"
+            class="w-full px-4 py-2.5 rounded-lg bg-slate-800 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition-all">
+        </div>
+        <div class="overflow-y-auto p-6 pt-2 scrollbar-hide flex-1" id="bundle-body">
           <div id="bundle-picker-loading" class="text-center py-10 text-slate-500">Loading all courses...</div>
         </div>
         <div class="p-4 border-t border-slate-800 flex items-center justify-between shrink-0">
@@ -683,34 +687,19 @@
     }
 
     // ─── Bundle Picker ───
-    async function openBundlePicker() {
-      document.getElementById('bundle-modal').classList.remove('hidden');
-      document.body.style.overflow = 'hidden';
-      const allData = await loadAllCourses();
+    let bundlePickerGroups = {};
+
+    function renderBundleList(groups, filterText) {
       const container = document.getElementById('bundle-body');
-      if (!allData) {
-        container.innerHTML = '<div class="text-center py-10 text-amber-400">' +
-          '<p>Could not load all_courses.json</p>' +
-          '<p class="text-sm text-slate-500 mt-2">Course picker requires the dashboard to be hosted (not opened via file://).</p>' +
-          '<p class="text-sm text-slate-500">Run <code class="bg-slate-800 px-1 rounded">python -m http.server</code> and open localhost:8000</p>' +
-        '</div>';
-        return;
-      }
-
-      const groups = {};
-      allData.courses.forEach(c => {
-        const base = c.code.includes(' ') ? c.code.split(' ')[0] : c.code;
-        if (!groups[base]) groups[base] = [];
-        groups[base].push(c);
-      });
-
-      selectedBundle = data.courses.map(c => c.code);
-      updateBundleCredits();
-
+      const query = (filterText || '').toLowerCase().trim();
       let html = '<div class="space-y-4">';
+      let matchCount = 0;
       Object.keys(groups).sort().forEach(base => {
         const courses = groups[base];
         const meta = courses[0];
+        const searchable = (meta.name + ' ' + meta.faculty + ' ' + base + ' ' + courses.map(c => c.code).join(' ')).toLowerCase();
+        if (query && !searchable.includes(query)) return;
+        matchCount++;
         html += '<div class="picker-course rounded-xl border border-slate-700 p-4">' +
           '<div class="flex items-center justify-between mb-2">' +
             '<div>' +
@@ -729,7 +718,42 @@
         '</div>';
       });
       html += '</div>';
+      if (matchCount === 0) {
+        html = '<div class="text-center py-10 text-slate-500"><p>No courses match "' + (query ? query.replace(/</g, '&lt;') : '') + '"</p></div>';
+      }
       container.innerHTML = html;
+    }
+
+    async function openBundlePicker() {
+      document.getElementById('bundle-modal').classList.remove('hidden');
+      document.body.style.overflow = 'hidden';
+      const allData = await loadAllCourses();
+      const searchInput = document.getElementById('bundle-search');
+      if (searchInput) searchInput.value = '';
+      if (!allData) {
+        document.getElementById('bundle-body').innerHTML = '<div class="text-center py-10 text-amber-400">' +
+          '<p>Could not load all_courses.json</p>' +
+          '<p class="text-sm text-slate-500 mt-2">Course picker requires the dashboard to be hosted (not opened via file://).</p>' +
+          '<p class="text-sm text-slate-500">Run <code class="bg-slate-800 px-1 rounded">python -m http.server</code> and open localhost:8000</p>' +
+        '</div>';
+        return;
+      }
+
+      bundlePickerGroups = {};
+      allData.courses.forEach(c => {
+        const base = c.code.includes(' ') ? c.code.split(' ')[0] : c.code;
+        if (!bundlePickerGroups[base]) bundlePickerGroups[base] = [];
+        bundlePickerGroups[base].push(c);
+      });
+
+      selectedBundle = data.courses.map(c => c.code);
+      updateBundleCredits();
+      renderBundleList(bundlePickerGroups, '');
+    }
+
+    function filterBundlePicker() {
+      const query = document.getElementById('bundle-search').value;
+      renderBundleList(bundlePickerGroups, query);
     }
 
     function closeBundlePicker() {
