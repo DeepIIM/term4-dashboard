@@ -89,6 +89,22 @@ for _, row in tt.iterrows():
 print(f"Found {len(sessions)} course-sections")
 print(f"Date range: {min(date_seen)} to {max(date_seen)}")
 
+# ─── Apply known reschedules ───
+# CCR Session 1 moved from June 25 to June 28 per official email
+# CCR-A: slot 3 → slot 2; CCR-B: slot 4 → slot 3
+reschedule_ccr = {
+    'CCR A': {'from_date': '2026-06-25', 'from_slot': 3, 'to_date': '2026-06-28', 'to_slot': 2},
+    'CCR B': {'from_date': '2026-06-25', 'from_slot': 4, 'to_date': '2026-06-28', 'to_slot': 3},
+}
+for key, patch in reschedule_ccr.items():
+    if key in sessions:
+        for s in sessions[key]:
+            if s['date'] == patch['from_date'] and s['slot'] == patch['from_slot']:
+                s['date'] = patch['to_date']
+                s['slot'] = patch['to_slot']
+                classrooms[key][(patch['to_date'], patch['to_slot'])] = classrooms[key].pop((patch['from_date'], patch['from_slot']), 'SRC-201')
+                print(f"Rescheduled {key}: {patch['from_date']} slot {patch['from_slot']} -> {patch['to_date']} slot {patch['to_slot']}")
+
 # Build all_courses.json with what metadata we have
 # We'll supplement faculty/credits from a hardcoded map extracted from course guide
 
@@ -166,10 +182,11 @@ for key in sorted(sessions.keys()):
     
     meta = course_metadata.get(base_code, {'name': base_code, 'faculty': 'TBA', 'credits': 0, 'sister': False})
     
-    course_sessions = sorted(sessions[key], key=lambda x: (x['num'] if x['num'] else 999, x['date'], x['slot']))
+    # Sort chronologically by date then slot (session numbers may be out of order after reschedules)
+    course_sessions = sorted(sessions[key], key=lambda x: (x['date'], x['slot']))
     
     course_sessions_out = []
-    for s in course_sessions:
+    for i, s in enumerate(course_sessions, start=1):
         day_name = datetime.fromisoformat(s['date']).strftime('%A')
         time_range = slot_times.get(s['slot'], f"Slot {s['slot']}")
         room = classrooms[key].get((s['date'], s['slot']), '')
@@ -179,7 +196,7 @@ for key in sorted(sessions.keys()):
             'slot': s['slot'],
             'time': time_range,
             'classroom': str(room) if room else 'TBA',
-            'sessionNum': s['num']
+            'sessionNum': i
         })
     
     dates = [s['date'] for s in course_sessions]

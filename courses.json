@@ -14,18 +14,18 @@
       "totalSessions": 10,
       "sessions": [
         {
-          "date": "2026-06-28",
-          "day": "Sunday",
-          "slot": 2,
-          "time": "9:00 am - 10:15 am",
-          "classroom": "SRC-201",
-          "sessionNum": 1
-        },
-        {
           "date": "2026-06-27",
           "day": "Saturday",
           "slot": 6,
           "time": "2:30 pm - 3:45 pm",
+          "classroom": "SRC-201",
+          "sessionNum": 1
+        },
+        {
+          "date": "2026-06-28",
+          "day": "Sunday",
+          "slot": 2,
+          "time": "9:00 am - 10:15 am",
           "classroom": "SRC-201",
           "sessionNum": 2
         },
@@ -100,18 +100,18 @@
         "faculty": "Prof. Shivani Sharma",
         "sessions": [
           {
-            "date": "2026-06-28",
-            "day": "Sunday",
-            "slot": 3,
-            "time": "10:30 am - 11:45 am",
-            "classroom": "SRC-201",
-            "sessionNum": 1
-          },
-          {
             "date": "2026-06-27",
             "day": "Saturday",
             "slot": 7,
             "time": "4:00 pm - 5:15 pm",
+            "classroom": "SRC-201",
+            "sessionNum": 1
+          },
+          {
+            "date": "2026-06-28",
+            "day": "Sunday",
+            "slot": 3,
+            "time": "10:30 am - 11:45 am",
             "classroom": "SRC-201",
             "sessionNum": 2
           },

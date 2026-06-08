@@ -2482,18 +2482,18 @@
       "totalSessions": 10,
       "sessions": [
         {
-          "date": "2026-06-28",
-          "day": "Sunday",
-          "slot": 2,
-          "time": "9:00 am - 10:15 am",
-          "classroom": "SRC-201",
-          "sessionNum": 1
-        },
-        {
           "date": "2026-06-27",
           "day": "Saturday",
           "slot": 6,
           "time": "2:30 pm - 3:45 pm",
+          "classroom": "SRC-201",
+          "sessionNum": 1
+        },
+        {
+          "date": "2026-06-28",
+          "day": "Sunday",
+          "slot": 2,
+          "time": "9:00 am - 10:15 am",
           "classroom": "SRC-201",
           "sessionNum": 2
         },
@@ -2574,18 +2574,18 @@
       "totalSessions": 10,
       "sessions": [
         {
-          "date": "2026-06-28",
-          "day": "Sunday",
-          "slot": 3,
-          "time": "10:30 am - 11:45 am",
-          "classroom": "SRC-201",
-          "sessionNum": 1
-        },
-        {
           "date": "2026-06-27",
           "day": "Saturday",
           "slot": 7,
           "time": "4:00 pm - 5:15 pm",
+          "classroom": "SRC-201",
+          "sessionNum": 1
+        },
+        {
+          "date": "2026-06-28",
+          "day": "Sunday",
+          "slot": 3,
+          "time": "10:30 am - 11:45 am",
           "classroom": "SRC-201",
           "sessionNum": 2
         },
@@ -3690,16 +3690,16 @@
           "sessionNum": 1
         },
         {
-          "date": "2026-07-10",
-          "day": "Friday",
+          "date": "2026-07-08",
+          "day": "Wednesday",
           "slot": 10,
           "time": "8:45 pm - 10:00 pm",
           "classroom": "F-201",
           "sessionNum": 2
         },
         {
-          "date": "2026-07-08",
-          "day": "Wednesday",
+          "date": "2026-07-10",
+          "day": "Friday",
           "slot": 10,
           "time": "8:45 pm - 10:00 pm",
           "classroom": "F-201",
@@ -3822,20 +3822,28 @@
           "sessionNum": 1
         },
         {
-          "date": "2026-07-10",
-          "day": "Friday",
+          "date": "2026-07-08",
+          "day": "Wednesday",
           "slot": 11,
           "time": "10:15 pm - 11:30 pm",
           "classroom": "F-201",
           "sessionNum": 2
         },
         {
-          "date": "2026-07-08",
-          "day": "Wednesday",
+          "date": "2026-07-10",
+          "day": "Friday",
           "slot": 11,
           "time": "10:15 pm - 11:30 pm",
           "classroom": "F-201",
           "sessionNum": 3
+        },
+        {
+          "date": "2026-07-15",
+          "day": "Wednesday",
+          "slot": 7,
+          "time": "4:00 pm - 5:15 pm",
+          "classroom": "F-203",
+          "sessionNum": 4
         },
         {
           "date": "2026-07-20",
@@ -3868,14 +3876,6 @@
           "time": "4:00 pm - 5:15 pm",
           "classroom": "F-201",
           "sessionNum": 8
-        },
-        {
-          "date": "2026-07-15",
-          "day": "Wednesday",
-          "slot": 7,
-          "time": "4:00 pm - 5:15 pm",
-          "classroom": "F-203",
-          "sessionNum": 9
         },
         {
           "date": "2026-07-29",
@@ -4410,18 +4410,18 @@
           "sessionNum": 2
         },
         {
-          "date": "2026-06-25",
-          "day": "Thursday",
-          "slot": 6,
-          "time": "2:30 pm - 3:45 pm",
-          "classroom": "F-103",
-          "sessionNum": 3
-        },
-        {
           "date": "2026-06-23",
           "day": "Tuesday",
           "slot": 2,
           "time": "9:00 am - 10:15 am",
+          "classroom": "F-103",
+          "sessionNum": 3
+        },
+        {
+          "date": "2026-06-25",
+          "day": "Thursday",
+          "slot": 6,
+          "time": "2:30 pm - 3:45 pm",
           "classroom": "F-103",
           "sessionNum": 4
         },
@@ -4582,18 +4582,18 @@
           "sessionNum": 2
         },
         {
-          "date": "2026-06-25",
-          "day": "Thursday",
-          "slot": 7,
-          "time": "4:00 pm - 5:15 pm",
-          "classroom": "F-103",
-          "sessionNum": 3
-        },
-        {
           "date": "2026-06-23",
           "day": "Tuesday",
           "slot": 3,
           "time": "10:30 am - 11:45 am",
+          "classroom": "F-103",
+          "sessionNum": 3
+        },
+        {
+          "date": "2026-06-25",
+          "day": "Thursday",
+          "slot": 7,
+          "time": "4:00 pm - 5:15 pm",
           "classroom": "F-103",
           "sessionNum": 4
         },
@@ -9014,19 +9014,19 @@
           "sessionNum": 3
         },
         {
-          "date": "2026-06-27",
-          "day": "Saturday",
-          "slot": 6,
-          "time": "2:30 pm - 3:45 pm",
-          "classroom": "F-203",
-          "sessionNum": 4
-        },
-        {
           "date": "2026-06-25",
           "day": "Thursday",
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-103",
+          "sessionNum": 4
+        },
+        {
+          "date": "2026-06-27",
+          "day": "Saturday",
+          "slot": 6,
+          "time": "2:30 pm - 3:45 pm",
+          "classroom": "F-203",
           "sessionNum": 5
         },
         {
@@ -10826,18 +10826,18 @@
       "totalSessions": 20,
       "sessions": [
         {
-          "date": "2026-07-07",
-          "day": "Tuesday",
-          "slot": 7,
-          "time": "4:00 pm - 5:15 pm",
-          "classroom": "F-203",
-          "sessionNum": 1
-        },
-        {
           "date": "2026-07-06",
           "day": "Monday",
           "slot": 10,
           "time": "8:45 pm - 10:00 pm",
+          "classroom": "F-203",
+          "sessionNum": 1
+        },
+        {
+          "date": "2026-07-07",
+          "day": "Tuesday",
+          "slot": 7,
+          "time": "4:00 pm - 5:15 pm",
           "classroom": "F-203",
           "sessionNum": 2
         },
@@ -10998,18 +10998,18 @@
       "totalSessions": 20,
       "sessions": [
         {
-          "date": "2026-07-07",
-          "day": "Tuesday",
-          "slot": 8,
-          "time": "5:30 pm - 6:45 pm",
-          "classroom": "F-203",
-          "sessionNum": 1
-        },
-        {
           "date": "2026-07-06",
           "day": "Monday",
           "slot": 11,
           "time": "10:15 pm - 11:30 pm",
+          "classroom": "F-203",
+          "sessionNum": 1
+        },
+        {
+          "date": "2026-07-07",
+          "day": "Tuesday",
+          "slot": 8,
+          "time": "5:30 pm - 6:45 pm",
           "classroom": "F-203",
           "sessionNum": 2
         },
@@ -11755,7 +11755,7 @@
           "slot": 3,
           "time": "10:30 am - 11:45 am",
           "classroom": "F-103",
-          "sessionNum": 5
+          "sessionNum": 1
         },
         {
           "date": "2026-06-19",
@@ -11763,7 +11763,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-103",
-          "sessionNum": 6
+          "sessionNum": 2
         },
         {
           "date": "2026-06-23",
@@ -11771,7 +11771,7 @@
           "slot": 6,
           "time": "2:30 pm - 3:45 pm",
           "classroom": "F-203",
-          "sessionNum": 9
+          "sessionNum": 3
         },
         {
           "date": "2026-06-23",
@@ -11779,7 +11779,7 @@
           "slot": 7,
           "time": "4:00 pm - 5:15 pm",
           "classroom": "F-203",
-          "sessionNum": 10
+          "sessionNum": 4
         },
         {
           "date": "2026-06-26",
@@ -11787,7 +11787,7 @@
           "slot": 3,
           "time": "10:30 am - 11:45 am",
           "classroom": "F-203",
-          "sessionNum": 12
+          "sessionNum": 5
         },
         {
           "date": "2026-06-26",
@@ -11795,7 +11795,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-203",
-          "sessionNum": 13
+          "sessionNum": 6
         },
         {
           "date": "2026-06-28",
@@ -11803,7 +11803,7 @@
           "slot": 3,
           "time": "10:30 am - 11:45 am",
           "classroom": "F-201",
-          "sessionNum": 14
+          "sessionNum": 7
         },
         {
           "date": "2026-06-28",
@@ -11811,7 +11811,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-201",
-          "sessionNum": 15
+          "sessionNum": 8
         },
         {
           "date": "2026-07-04",
@@ -11819,7 +11819,7 @@
           "slot": 10,
           "time": "8:45 pm - 10:00 pm",
           "classroom": "F-201",
-          "sessionNum": 17
+          "sessionNum": 9
         },
         {
           "date": "2026-07-05",
@@ -11827,7 +11827,7 @@
           "slot": 8,
           "time": "5:30 pm - 6:45 pm",
           "classroom": "F-203",
-          "sessionNum": 18
+          "sessionNum": 10
         },
         {
           "date": "2026-07-11",
@@ -11835,7 +11835,7 @@
           "slot": 10,
           "time": "8:45 pm - 10:00 pm",
           "classroom": "F-201",
-          "sessionNum": 19
+          "sessionNum": 11
         },
         {
           "date": "2026-07-11",
@@ -11843,7 +11843,7 @@
           "slot": 11,
           "time": "10:15 pm - 11:30 pm",
           "classroom": "F-201",
-          "sessionNum": 20
+          "sessionNum": 12
         }
       ]
     },
@@ -11895,7 +11895,7 @@
           "slot": 3,
           "time": "10:30 am - 11:45 am",
           "classroom": "F-201",
-          "sessionNum": 7
+          "sessionNum": 5
         },
         {
           "date": "2026-06-21",
@@ -11903,7 +11903,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-201",
-          "sessionNum": 8
+          "sessionNum": 6
         },
         {
           "date": "2026-06-25",
@@ -11911,7 +11911,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "F-203",
-          "sessionNum": 11
+          "sessionNum": 7
         },
         {
           "date": "2026-06-29",
@@ -11919,7 +11919,7 @@
           "slot": 9,
           "time": "7:00 pm - 8:15 pm",
           "classroom": "F-203",
-          "sessionNum": 16
+          "sessionNum": 8
         }
       ]
     },
@@ -11939,7 +11939,7 @@
           "slot": 7,
           "time": "4:00 pm - 5:15 pm",
           "classroom": "F-203",
-          "sessionNum": 5
+          "sessionNum": 1
         },
         {
           "date": "2026-06-19",
@@ -11947,39 +11947,39 @@
           "slot": 8,
           "time": "5:30 pm - 6:45 pm",
           "classroom": "F-203",
+          "sessionNum": 2
+        },
+        {
+          "date": "2026-06-23",
+          "day": "Tuesday",
+          "slot": 10,
+          "time": "8:45 pm - 10:00 pm",
+          "classroom": "F-203",
+          "sessionNum": 3
+        },
+        {
+          "date": "2026-06-23",
+          "day": "Tuesday",
+          "slot": 11,
+          "time": "10:15 pm - 11:30 pm",
+          "classroom": "F-203",
+          "sessionNum": 4
+        },
+        {
+          "date": "2026-06-26",
+          "day": "Friday",
+          "slot": 10,
+          "time": "8:45 pm - 10:00 pm",
+          "classroom": "F-201",
+          "sessionNum": 5
+        },
+        {
+          "date": "2026-06-26",
+          "day": "Friday",
+          "slot": 11,
+          "time": "10:15 pm - 11:30 pm",
+          "classroom": "F-201",
           "sessionNum": 6
-        },
-        {
-          "date": "2026-06-23",
-          "day": "Tuesday",
-          "slot": 10,
-          "time": "8:45 pm - 10:00 pm",
-          "classroom": "F-203",
-          "sessionNum": 9
-        },
-        {
-          "date": "2026-06-23",
-          "day": "Tuesday",
-          "slot": 11,
-          "time": "10:15 pm - 11:30 pm",
-          "classroom": "F-203",
-          "sessionNum": 10
-        },
-        {
-          "date": "2026-06-26",
-          "day": "Friday",
-          "slot": 10,
-          "time": "8:45 pm - 10:00 pm",
-          "classroom": "F-201",
-          "sessionNum": 12
-        },
-        {
-          "date": "2026-06-26",
-          "day": "Friday",
-          "slot": 11,
-          "time": "10:15 pm - 11:30 pm",
-          "classroom": "F-201",
-          "sessionNum": 13
         },
         {
           "date": "2026-06-28",
@@ -11987,7 +11987,7 @@
           "slot": 8,
           "time": "5:30 pm - 6:45 pm",
           "classroom": "F-201",
-          "sessionNum": 14
+          "sessionNum": 7
         },
         {
           "date": "2026-06-28",
@@ -11995,7 +11995,7 @@
           "slot": 9,
           "time": "7:00 pm - 8:15 pm",
           "classroom": "F-201",
-          "sessionNum": 15
+          "sessionNum": 8
         },
         {
           "date": "2026-07-04",
@@ -12003,7 +12003,7 @@
           "slot": 11,
           "time": "10:15 pm - 11:30 pm",
           "classroom": "F-201",
-          "sessionNum": 17
+          "sessionNum": 9
         },
         {
           "date": "2026-07-05",
@@ -12011,7 +12011,7 @@
           "slot": 9,
           "time": "7:00 pm - 8:15 pm",
           "classroom": "F-203",
-          "sessionNum": 18
+          "sessionNum": 10
         },
         {
           "date": "2026-07-11",
@@ -12019,7 +12019,7 @@
           "slot": 3,
           "time": "10:30 am - 11:45 am",
           "classroom": "SRC-201",
-          "sessionNum": 19
+          "sessionNum": 11
         },
         {
           "date": "2026-07-11",
@@ -12027,7 +12027,7 @@
           "slot": 4,
           "time": "12 noon - 1:15 pm",
           "classroom": "SRC-201",
-          "sessionNum": 20
+          "sessionNum": 12
         }
       ]
     },
