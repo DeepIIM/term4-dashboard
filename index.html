@@ -128,6 +128,15 @@
         </div>
       </section>
 
+      <!-- Upcoming Clashes -->
+      <section class="glass rounded-2xl p-5 mb-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm font-bold text-white flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>Upcoming Clashes</h2>
+          <button onclick="openSetupModal()" class="text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">Edit Profile</button>
+        </div>
+        <div id="home-clash-list" class="space-y-2 max-h-80 overflow-y-auto scrollbar-hide"></div>
+      </section>
+
       <!-- Course Progress -->
       <section class="glass rounded-2xl p-5">
         <h2 class="text-sm font-bold text-white mb-4">Course Progress</h2>
@@ -191,6 +200,55 @@
     </div>
   </div>
 
+  <!-- Setup Wizard Modal -->
+  <div id="setup-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/80 backdrop-blur-sm"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-lg shadow-2xl" style="animation: fadeIn 0.3s ease-out">
+        <div class="p-6 border-b border-slate-800">
+          <h2 class="text-xl font-bold text-white">Welcome to Term-IV Dashboard</h2>
+          <p class="text-sm text-slate-400 mt-1">Let's set up your profile in 2 quick steps</p>
+        </div>
+        <div class="p-6 space-y-5">
+          <!-- Step 1: CFA -->
+          <div>
+            <label class="block text-sm font-medium text-slate-300 mb-2">Are you giving CFA?</label>
+            <div class="flex gap-3">
+              <button id="setup-cfa-yes" onclick="setCfaChoice(true)" class="flex-1 py-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-sm hover:border-indigo-500 hover:text-indigo-400 transition-colors">Yes</button>
+              <button id="setup-cfa-no" onclick="setCfaChoice(false)" class="flex-1 py-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-sm hover:border-indigo-500 hover:text-indigo-400 transition-colors">No</button>
+            </div>
+          </div>
+          <div id="setup-cfa-date-wrap" class="hidden">
+            <label class="block text-sm font-medium text-slate-300 mb-2">CFA Exam Date</label>
+            <input type="date" id="setup-cfa-date" class="w-full bg-slate-800 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-indigo-500" value="2026-08-19">
+          </div>
+          <!-- Step 2: Bundle hint -->
+          <div class="p-3 rounded-lg bg-indigo-500/5 border border-indigo-500/20">
+            <p class="text-xs text-indigo-300">Next, you'll pick your course bundle. You can change this anytime from the <strong>Bundle</strong> button.</p>
+          </div>
+        </div>
+        <div class="p-4 border-t border-slate-800 flex justify-end gap-2">
+          <button onclick="closeSetupModal()" class="px-4 py-2 rounded-lg bg-slate-800 text-slate-300 text-sm hover:bg-slate-700">Skip for now</button>
+          <button onclick="saveSetupAndOpenBundle()" class="px-4 py-2 rounded-lg bg-indigo-500 text-white text-sm font-medium hover:bg-indigo-600">Pick Courses &rarr;</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Clash Decision Modal -->
+  <div id="clash-modal" class="fixed inset-0 z-50 hidden">
+    <div class="absolute inset-0 bg-black/70 backdrop-blur-sm" onclick="closeClashModal()"></div>
+    <div class="absolute inset-0 flex items-center justify-center p-4">
+      <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md shadow-2xl" style="animation: fadeIn 0.2s ease-out">
+        <div class="p-5 border-b border-slate-800 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-white">Resolve Clash</h3>
+          <button onclick="closeClashModal()" class="w-8 h-8 rounded-lg bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700 flex items-center justify-center text-lg">&times;</button>
+        </div>
+        <div id="clash-modal-body" class="p-5 space-y-3"></div>
+      </div>
+    </div>
+  </div>
+
   <script>
     const DEFAULT_DATA = {"termStart": "2026-06-15", "termEnd": "2026-08-08", "cfaDate": "2026-08-19", "courses": [{"code": "CCR A", "name": "Communicating Corporate Reputation", "faculty": "Prof. Shivani Sharma", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-27", "endDate": "2026-08-05", "totalSessions": 10, "sessions": [{"date": "2026-06-27", "day": "Saturday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-28", "day": "Sunday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-02", "day": "Thursday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-18", "day": "Saturday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-08-03", "day": "Monday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-08-05", "day": "Wednesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 10}], "sisterSection": {"code": "CCR B", "name": "Communicating Corporate Reputation", "faculty": "Prof. Shivani Sharma", "sessions": [{"date": "2026-06-27", "day": "Saturday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-28", "day": "Sunday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-02", "day": "Thursday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-18", "day": "Saturday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-08-03", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-08-05", "day": "Wednesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 10}]}}, {"code": "ACEL A", "name": "Advanced Corporate and Economic Laws", "faculty": "Prof. I. Sridhar", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-07-30", "totalSessions": 10, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-18", "day": "Thursday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-30", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-02", "day": "Thursday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-21", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-28", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-30", "day": "Thursday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 10}], "sisterSection": {"code": "ACEL B", "name": "Advanced Corporate and Economic Laws", "faculty": "Prof. I. Sridhar", "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-18", "day": "Thursday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-30", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-02", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-07-16", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-21", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 7}, {"date": "2026-07-23", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-28", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-30", "day": "Thursday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 10}]}}, {"code": "GAIB", "name": "Generative Artificial Intelligence in Business", "faculty": "Prof. Prabin K Panigrahi", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-17", "endDate": "2026-07-17", "totalSessions": 10, "sessions": [{"date": "2026-06-17", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-06-26", "day": "Friday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-01", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-03", "day": "Friday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 7}, {"date": "2026-07-13", "day": "Monday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-15", "day": "Wednesday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 9}, {"date": "2026-07-17", "day": "Friday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "SRC-201", "sessionNum": 10}]}, {"code": "TSB A", "name": "Technology Strategy for Business", "faculty": "Prof. Rajhans Mishra", "credits": 2, "sisterAllowed": true, "startDate": "2026-06-15", "endDate": "2026-07-08", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-17", "day": "Wednesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-19", "day": "Friday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-22", "day": "Monday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 4}, {"date": "2026-06-24", "day": "Wednesday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-06-26", "day": "Friday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 6}, {"date": "2026-06-29", "day": "Monday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 8}, {"date": "2026-07-06", "day": "Monday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-08", "day": "Wednesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 10}], "sisterSection": {"code": "TSB B", "name": "Technology Strategy for Business", "faculty": "Prof. Rajhans Mishra", "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-17", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-19", "day": "Friday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 3}, {"date": "2026-06-22", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 4}, {"date": "2026-06-24", "day": "Wednesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 5}, {"date": "2026-06-26", "day": "Friday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 6}, {"date": "2026-06-29", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-03", "day": "Friday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 8}, {"date": "2026-07-06", "day": "Monday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-08", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 10}]}}, {"code": "GAFW A", "name": "Gen AI and Future of Work", "faculty": "Prof. Kajari Mukherjee", "credits": 1, "sisterAllowed": true, "startDate": "2026-06-29", "endDate": "2026-07-09", "totalSessions": 5, "sessions": [{"date": "2026-06-29", "day": "Monday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-01", "day": "Wednesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 5}], "sisterSection": {"code": "GAFW B", "name": "Gen AI and Future of Work", "faculty": "Prof. Kajari Mukherjee", "sessions": [{"date": "2026-06-29", "day": "Monday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-01", "day": "Wednesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-07", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 5}]}}, {"code": "MSN", "name": "Managing Social Networks", "faculty": "Prof. Nobin Thomas", "credits": 2, "sisterAllowed": false, "startDate": "2026-06-15", "endDate": "2026-07-24", "totalSessions": 10, "sessions": [{"date": "2026-06-15", "day": "Monday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-07-02", "day": "Thursday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-07-03", "day": "Friday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-08", "day": "Wednesday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-09", "day": "Thursday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 5}, {"date": "2026-07-15", "day": "Wednesday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-17", "day": "Friday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-20", "day": "Monday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 8}, {"date": "2026-07-23", "day": "Thursday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-203", "sessionNum": 9}, {"date": "2026-07-24", "day": "Friday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-201", "sessionNum": 10}]}, {"code": "CEDA A", "name": "Corporate Entrepreneurship In The Disruptive Age", "faculty": "Prof. Sumit Chakraborty", "credits": 3, "sisterAllowed": true, "startDate": "2026-06-16", "endDate": "2026-08-08", "totalSessions": 15, "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-07", "day": "Tuesday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-14", "day": "Tuesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-18", "day": "Saturday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-103", "sessionNum": 10}, {"date": "2026-07-23", "day": "Thursday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 11}, {"date": "2026-07-25", "day": "Saturday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 12}, {"date": "2026-07-30", "day": "Thursday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 13}, {"date": "2026-08-04", "day": "Tuesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-103", "sessionNum": 14}, {"date": "2026-08-08", "day": "Saturday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-103", "sessionNum": 15}], "sisterSection": {"code": "CEDA B", "name": "Corporate Entrepreneurship In The Disruptive Age", "faculty": "Prof. Sumit Chakraborty", "sessions": [{"date": "2026-06-16", "day": "Tuesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-20", "day": "Saturday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 2}, {"date": "2026-06-23", "day": "Tuesday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 3}, {"date": "2026-06-27", "day": "Saturday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-06-30", "day": "Tuesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-04", "day": "Saturday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-07", "day": "Tuesday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 7}, {"date": "2026-07-11", "day": "Saturday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 8}, {"date": "2026-07-14", "day": "Tuesday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 9}, {"date": "2026-07-18", "day": "Saturday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "F-103", "sessionNum": 10}, {"date": "2026-07-23", "day": "Thursday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 11}, {"date": "2026-07-25", "day": "Saturday", "slot": 2, "time": "10:30 am - 11:45 am", "classroom": "F-203", "sessionNum": 12}, {"date": "2026-07-30", "day": "Thursday", "slot": 8, "time": "8:45 pm - 10:00 pm", "classroom": "F-103", "sessionNum": 13}, {"date": "2026-08-04", "day": "Tuesday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "F-103", "sessionNum": 14}, {"date": "2026-08-08", "day": "Saturday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-103", "sessionNum": 15}]}}, {"code": "M&A", "name": "Mergers and Acquisitions", "faculty": "Prof. Manish Popli", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-22", "endDate": "2026-08-07", "totalSessions": 15, "sessions": [{"date": "2026-06-22", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 1}, {"date": "2026-06-24", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 2}, {"date": "2026-06-29", "day": "Monday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-203", "sessionNum": 3}, {"date": "2026-07-01", "day": "Wednesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 5}, {"date": "2026-07-06", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 7}, {"date": "2026-07-08", "day": "Wednesday", "slot": 7, "time": "7:00 pm - 8:15 pm", "classroom": "SRC-201", "sessionNum": 8}, {"date": "2026-07-10", "day": "Friday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 9}, {"date": "2026-07-13", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 10}, {"date": "2026-07-15", "day": "Wednesday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-201", "sessionNum": 11}, {"date": "2026-07-29", "day": "Wednesday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-201", "sessionNum": 12}, {"date": "2026-07-31", "day": "Friday", "slot": 1, "time": "9:00 am - 10:15 am", "classroom": "F-203", "sessionNum": 13}, {"date": "2026-08-03", "day": "Monday", "slot": 3, "time": "12 noon - 1:15 pm", "classroom": "F-203", "sessionNum": 14}, {"date": "2026-08-07", "day": "Friday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "F-201", "sessionNum": 15}]}, {"code": "SS G", "name": "Strategy Simulation", "faculty": "Prof. Rotation (Surana/Dwibedy/Basu/Gunta/Sunder)", "credits": 3, "sisterAllowed": false, "startDate": "2026-06-19", "endDate": "2026-07-20", "totalSessions": 10, "sessions": [{"date": "2026-06-19", "day": "Friday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 1}, {"date": "2026-06-22", "day": "Monday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 2}, {"date": "2026-06-25", "day": "Thursday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "SRC-201", "sessionNum": 3}, {"date": "2026-06-29", "day": "Monday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "F-203", "sessionNum": 4}, {"date": "2026-07-03", "day": "Friday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 5}, {"date": "2026-07-03", "day": "Friday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 6}, {"date": "2026-07-08", "day": "Wednesday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "G103", "sessionNum": 7}, {"date": "2026-07-13", "day": "Monday", "slot": 6, "time": "5:30 pm - 6:45 pm", "classroom": "G103", "sessionNum": 8}, {"date": "2026-07-20", "day": "Monday", "slot": 4, "time": "2:30 pm - 3:45 pm", "classroom": "SRC-201", "sessionNum": 9}, {"date": "2026-07-20", "day": "Monday", "slot": 5, "time": "4:00 pm - 5:15 pm", "classroom": "SRC-201", "sessionNum": 10}]}], "clashes": [{"courseA": "CCR A", "courseB": "ACEL A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "CCR A", "courseB": "GAFW A", "count": 2, "rigid": false, "manageable": true}, {"courseA": "TSB A", "courseB": "SS G", "count": 1, "rigid": false, "manageable": true}, {"courseA": "GAFW A", "courseB": "M&A", "count": 1, "rigid": false, "manageable": true}, {"courseA": "MSN", "courseB": "SS G", "count": 1, "rigid": true, "manageable": false}]};
     let data = DEFAULT_DATA;
@@ -220,6 +278,109 @@
       return 'term4_attendance_' + Math.abs(hash);
     }
     const STORAGE_KEY = getStorageKey();
+
+    // ─── Profile & Clash Decisions ───
+    const PROFILE_KEY = 'term4_profile';
+    const CLASH_DECISIONS_KEY = 'term4_clash_decisions';
+
+    function getProfile() {
+      try { return JSON.parse(localStorage.getItem(PROFILE_KEY)) || {}; } catch { return {}; }
+    }
+    function saveProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
+
+    function getClashDecisions() {
+      try { return JSON.parse(localStorage.getItem(CLASH_DECISIONS_KEY)) || {}; } catch { return {}; }
+    }
+    function saveClashDecision(date, courseA, courseB, choice) {
+      const decisions = getClashDecisions();
+      const key = date + '_' + courseA + '_' + courseB;
+      decisions[key] = { date, courseA, courseB, choice, timestamp: new Date().toISOString() };
+      localStorage.setItem(CLASH_DECISIONS_KEY, JSON.stringify(decisions));
+      renderHomeTab();
+      if (!document.getElementById('tab-courses').classList.contains('hidden')) renderCoursesTab();
+      if (!document.getElementById('tab-calendar').classList.contains('hidden')) renderCalendarTab();
+    }
+    function getClashDecision(date, courseA, courseB) {
+      return getClashDecisions()[date + '_' + courseA + '_' + courseB] || null;
+    }
+    function deleteClashDecision(date, courseA, courseB) {
+      const decisions = getClashDecisions();
+      delete decisions[date + '_' + courseA + '_' + courseB];
+      localStorage.setItem(CLASH_DECISIONS_KEY, JSON.stringify(decisions));
+      renderHomeTab();
+    }
+
+    // ─── Setup Modal ───
+    let setupCfaChoice = null;
+    function setCfaChoice(yes) {
+      setupCfaChoice = yes;
+      document.getElementById('setup-cfa-yes').className = yes
+        ? 'flex-1 py-2.5 rounded-lg border border-indigo-500 bg-indigo-500/20 text-indigo-400 text-sm'
+        : 'flex-1 py-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-sm hover:border-indigo-500 hover:text-indigo-400 transition-colors';
+      document.getElementById('setup-cfa-no').className = !yes
+        ? 'flex-1 py-2.5 rounded-lg border border-indigo-500 bg-indigo-500/20 text-indigo-400 text-sm'
+        : 'flex-1 py-2.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 text-sm hover:border-indigo-500 hover:text-indigo-400 transition-colors';
+      document.getElementById('setup-cfa-date-wrap').classList.toggle('hidden', !yes);
+    }
+    function openSetupModal() {
+      const p = getProfile();
+      if (p.cfaGiving !== undefined) setupCfaChoice = p.cfaGiving;
+      if (setupCfaChoice !== null) setCfaChoice(setupCfaChoice);
+      if (p.cfaDate) document.getElementById('setup-cfa-date').value = p.cfaDate;
+      document.getElementById('setup-modal').classList.remove('hidden');
+    }
+    function closeSetupModal() {
+      document.getElementById('setup-modal').classList.add('hidden');
+    }
+    function saveSetupAndOpenBundle() {
+      const dateVal = document.getElementById('setup-cfa-date').value;
+      saveProfile({ cfaGiving: !!setupCfaChoice, cfaDate: setupCfaChoice ? dateVal : '', setupComplete: true });
+      closeSetupModal();
+      openBundlePicker();
+      renderHomeTab();
+    }
+
+    // ─── Clash Decision Modal ───
+    function openClashModal(date, courseA, courseB) {
+      const clash = findClashes(date).find(c =>
+        (c.sessionA.course.code === courseA && c.sessionB.course.code === courseB) ||
+        (c.sessionA.course.code === courseB && c.sessionB.course.code === courseA)
+      );
+      if (!clash) return;
+      const a = clash.sessionA.course;
+      const b = clash.sessionB.course;
+      const existing = getClashDecision(date, courseA, courseB);
+      let html = '<div class="text-sm text-slate-300 mb-3">' +
+        '<strong>' + date + '</strong> &mdash; Slot ' + clash.sessionA.slot + '<br>' +
+        '<span class="text-rose-400">&#9888;</span> ' + a.code + ' (' + clash.sessionA.time + ', ' + clash.sessionA.classroom + ')<br>' +
+        '<span class="text-rose-400">&#9888;</span> ' + b.code + ' (' + clash.sessionB.time + ', ' + clash.sessionB.classroom + ')' +
+        '</div>';
+      const btnClass = 'w-full text-left px-3 py-2.5 rounded-lg border text-sm transition-colors mb-1.5 ';
+      const opts = [];
+      opts.push({ key: 'A', label: 'Attend ' + a.code + ' as planned', cls: 'border-slate-700 bg-slate-800 text-slate-300 hover:border-indigo-500 hover:text-indigo-400' });
+      opts.push({ key: 'B', label: 'Attend ' + b.code + ' as planned', cls: 'border-slate-700 bg-slate-800 text-slate-300 hover:border-indigo-500 hover:text-indigo-400' });
+      if (!clash.rigid && a.sisterAllowed && a.sisterSection) {
+        const sis = a.sisterSection;
+        const sisSess = sis.sessions.find(s => s.sessionNum === clash.sessionA.sessionNum);
+        if (sisSess) opts.push({ key: 'sisterA', label: 'Attend ' + sis.code + ' instead (' + sisSess.time + ', ' + sisSess.classroom + ')', cls: 'border-amber-700/40 bg-amber-500/10 text-amber-300 hover:border-amber-500' });
+      }
+      if (!clash.rigid && b.sisterAllowed && b.sisterSection) {
+        const sis = b.sisterSection;
+        const sisSess = sis.sessions.find(s => s.sessionNum === clash.sessionB.sessionNum);
+        if (sisSess) opts.push({ key: 'sisterB', label: 'Attend ' + sis.code + ' instead (' + sisSess.time + ', ' + sisSess.classroom + ')', cls: 'border-amber-700/40 bg-amber-500/10 text-amber-300 hover:border-amber-500' });
+      }
+      opts.push({ key: 'skip', label: 'Will miss one / Decide later', cls: 'border-rose-700/30 bg-rose-500/10 text-rose-300 hover:border-rose-500' });
+      opts.forEach(o => {
+        const active = existing && existing.choice === o.key;
+        html += `<button onclick="saveClashDecision('${date}','${courseA}','${courseB}','${o.key}'); closeClashModal();" class="${btnClass} ${o.cls} ${active ? 'ring-1 ring-indigo-500 border-indigo-500' : ''}">${active ? '&#10003; ' : ''}${o.label}</button>`;
+      });
+      if (existing) {
+        html += `<button onclick="deleteClashDecision('${date}','${courseA}','${courseB}'); closeClashModal();" class="${btnClass} border-slate-700 bg-slate-800 text-slate-500 hover:text-rose-400 text-xs mt-2">Clear decision</button>`;
+      }
+      document.getElementById('clash-modal-body').innerHTML = html;
+      document.getElementById('clash-modal').classList.remove('hidden');
+    }
+    function closeClashModal() { document.getElementById('clash-modal').classList.add('hidden'); }
 
     // Dynamic color assignment
     function getCourseColor(code) {
@@ -393,7 +554,9 @@
       const todayStr = now.toISOString().split('T')[0];
       const termStart = new Date(data.termStart);
       const termEnd = new Date(data.termEnd);
-      const cfaDate = new Date(data.cfaDate);
+      const profile = getProfile();
+      const cfaDateVal = (profile.cfaGiving && profile.cfaDate) ? profile.cfaDate : data.cfaDate;
+      const cfaDate = new Date(cfaDateVal);
 
       const totalDays = Math.ceil((termEnd - termStart) / (1000*60*60*24));
       const elapsed = Math.ceil((now - termStart) / (1000*60*60*24));
@@ -428,6 +591,43 @@
       renderDayList('home-today-list', 'home-today-date', todayStr, 'No classes today &#127881;');
       const tmrw = new Date(now); tmrw.setDate(tmrw.getDate() + 1);
       renderDayList('home-tmrw-list', 'home-tmrw-date', tmrw.toISOString().split('T')[0], 'No classes tomorrow');
+
+      // ─── Upcoming Clashes Tracker ───
+      const clashEl = document.getElementById('home-clash-list');
+      if (clashEl) {
+        const upcomingClashes = [];
+        for (let i = 0; i < 21; i++) {
+          const d = new Date(now); d.setDate(d.getDate() + i);
+          const dStr = d.toISOString().split('T')[0];
+          const dayClashes = findClashes(dStr);
+          dayClashes.forEach(c => upcomingClashes.push({ ...c, date: dStr }));
+        }
+        if (!upcomingClashes.length) {
+          clashEl.innerHTML = '<div class="text-sm text-slate-500 text-center py-4">No upcoming clashes &#127881;</div>';
+        } else {
+          clashEl.innerHTML = upcomingClashes.map(c => {
+            const a = c.sessionA.course;
+            const b = c.sessionB.course;
+            const decision = getClashDecision(c.date, a.code, b.code) || getClashDecision(c.date, b.code, a.code);
+            const isPast = c.date < todayStr;
+            const isToday = c.date === todayStr;
+            const dateLabel = isToday ? 'Today' : isPast ? 'Past' : new Date(c.date).toLocaleDateString('en-IN', {weekday:'short', month:'short', day:'numeric'});
+            let decisionBadge = '';
+            if (decision) {
+              const labels = { A: 'Attend ' + a.code, B: 'Attend ' + b.code, sisterA: a.sisterSection ? a.sisterSection.code : 'Sister A', sisterB: b.sisterSection ? b.sisterSection.code : 'Sister B', skip: 'Skip one' };
+              decisionBadge = '<span class="ml-2 text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">' + (labels[decision.choice] || decision.choice) + '</span>';
+            }
+            const opacity = isPast && !decision ? 'opacity-50' : '';
+            return '<div class="flex items-center justify-between p-2.5 rounded-lg bg-slate-900/50 border border-slate-800/60 ' + opacity + '">' +
+              '<div class="min-w-0">' +
+                '<div class="text-xs font-medium text-white">' + dateLabel + ' &middot; Slot ' + c.sessionA.slot + decisionBadge + '</div>' +
+                '<div class="text-[10px] text-slate-400 truncate">' + a.code + ' vs ' + b.code + '</div>' +
+              '</div>' +
+              '<button onclick="openClashModal(\'' + c.date + '\',\'' + a.code + '\',\'' + b.code + '\')" class="shrink-0 ml-2 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white hover:bg-indigo-500/30 transition-colors">' + (decision ? 'Edit' : 'Resolve') + '</button>' +
+            '</div>';
+          }).join('');
+        }
+      }
 
       const progressEl = document.getElementById('home-progress-list');
       progressEl.innerHTML = data.courses.map(c => {
@@ -470,10 +670,22 @@
                         st === 'absent' ? '<span class="text-[10px] px-1.5 py-0.5 rounded bg-rose-500/20 text-rose-400 font-medium">Absent</span>' :
                         '<span class="text-[10px] px-1.5 py-0.5 rounded bg-slate-700 text-slate-400">Not marked</span>';
         const isClash = clashSessionKeys.has(s.date + '_' + s.course.code + '_' + s.slot);
-        const clashHTML = isClash ? getClashSuggestionHTML(clashes.find(c =>
+        const myClash = isClash ? clashes.find(c =>
           (c.sessionA.course.code === s.course.code && c.sessionA.slot === s.slot) ||
           (c.sessionB.course.code === s.course.code && c.sessionB.slot === s.slot)
-        )) : '';
+        ) : null;
+        const clashHTML = myClash ? getClashSuggestionHTML(myClash) : '';
+        let decisionBadge = '';
+        if (myClash) {
+          const otherCode = myClash.sessionA.course.code === s.course.code ? myClash.sessionB.course.code : myClash.sessionA.course.code;
+          const decision = getClashDecision(s.date, s.course.code, otherCode) || getClashDecision(s.date, otherCode, s.course.code);
+          if (decision) {
+            const dl = { A: 'Attend ' + myClash.sessionA.course.code, B: 'Attend ' + myClash.sessionB.course.code, sisterA: myClash.sessionA.course.sisterSection ? myClash.sessionA.course.sisterSection.code : 'Sister', sisterB: myClash.sessionB.course.sisterSection ? myClash.sessionB.course.sisterSection.code : 'Sister', skip: 'Skip one' };
+            decisionBadge = '<div class="mt-1.5 flex items-center gap-2"><span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">Plan: ' + (dl[decision.choice] || decision.choice) + '</span><button onclick="openClashModal(\'' + s.date + '\',\'' + myClash.sessionA.course.code + '\',\'' + myClash.sessionB.course.code + '\')" class="text-[10px] text-slate-500 hover:text-indigo-400 underline">Change</button></div>';
+          } else {
+            decisionBadge = '<div class="mt-1.5"><button onclick="openClashModal(\'' + s.date + '\',\'' + myClash.sessionA.course.code + '\',\'' + myClash.sessionB.course.code + '\')" class="text-[10px] px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-colors">&#9888; Resolve clash</button></div>';
+          }
+        }
         return '<div class="flex items-center gap-3 p-3 rounded-xl bg-slate-900/50 border border-slate-800/60 ' + (isClash ? 'border-amber-500/30' : '') + '">' +
           '<div class="w-11 h-11 rounded-lg bg-gradient-to-br ' + col.gradient + ' flex flex-col items-center justify-center text-white shrink-0">' +
             '<span class="text-[9px] font-bold leading-none">' + s.time.split(' ')[0] + '</span>' +
@@ -487,6 +699,7 @@
             '</div>' +
             '<div class="text-xs text-slate-500 mt-0.5">' + s.course.faculty + ' &bull; ' + s.classroom + '</div>' +
             clashHTML +
+            decisionBadge +
           '</div>' +
           '<div class="shrink-0">' + attBtn(s.date, s.course.code, s.slot, true) + '</div>' +
         '</div>';
@@ -625,6 +838,25 @@
           '<div class="bg-slate-800/50 rounded-lg p-3 text-center"><div class="text-lg font-bold text-rose-400">' + stats.absent + '</div><div class="text-[10px] text-slate-500">Absent</div></div>' +
         '</div>';
 
+      // Build clash history for this course
+      let clashHistoryHtml = '';
+      const decisions = getClashDecisions();
+      const myDecisions = Object.values(decisions).filter(d => d.courseA === code || d.courseB === code);
+      if (myDecisions.length) {
+        clashHistoryHtml = '<div class="mb-4 p-4 rounded-xl bg-slate-800/40 border border-slate-700/50">' +
+          '<h4 class="text-xs font-bold text-slate-300 uppercase tracking-wider mb-2">Your Clash Decisions</h4>' +
+          '<div class="space-y-2">' +
+          myDecisions.map(d => {
+            const other = d.courseA === code ? d.courseB : d.courseA;
+            const labels = { A: 'Attend ' + d.courseA, B: 'Attend ' + d.courseB, sisterA: 'Attend sister of ' + d.courseA, sisterB: 'Attend sister of ' + d.courseB, skip: 'Skip one' };
+            return '<div class="flex items-center justify-between text-sm">' +
+              '<span class="text-slate-400">' + new Date(d.date).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' vs ' + other + '</span>' +
+              '<span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">' + (labels[d.choice] || d.choice) + '</span>' +
+            '</div>';
+          }).join('') +
+          '</div></div>';
+      }
+
       let rowsHtml = '';
       for (let i = 0; i < c.sessions.length; i++) {
         const s = c.sessions[i];
@@ -643,6 +875,7 @@
         const btbBadge = isBackToBack ? '<span class="text-[9px] px-1.5 py-0.5 rounded bg-indigo-500/20 text-indigo-400 ml-2">Back-to-back</span>' : '';
 
         let clashHtml = '';
+        let decisionBadge = '';
         const dayClashes = findClashes(s.date);
         const myClash = dayClashes.find(cl =>
           (cl.sessionA.course.code === code && cl.sessionA.slot === s.slot) ||
@@ -650,6 +883,14 @@
         );
         if (myClash) {
           clashHtml = getClashSuggestionHTML(myClash);
+          const otherCode = myClash.sessionA.course.code === code ? myClash.sessionB.course.code : myClash.sessionA.course.code;
+          const decision = getClashDecision(s.date, code, otherCode) || getClashDecision(s.date, otherCode, code);
+          if (decision) {
+            const dl = { A: 'Plan: Attend ' + myClash.sessionA.course.code, B: 'Plan: Attend ' + myClash.sessionB.course.code, sisterA: 'Plan: ' + (myClash.sessionA.course.sisterSection ? myClash.sessionA.course.sisterSection.code : 'Sister A'), sisterB: 'Plan: ' + (myClash.sessionB.course.sisterSection ? myClash.sessionB.course.sisterSection.code : 'Sister B'), skip: 'Plan: Skip one' };
+            decisionBadge = '<div class="mt-1"><span class="text-[10px] px-1.5 py-0.5 rounded bg-emerald-500/15 text-emerald-400 border border-emerald-500/20">' + (dl[decision.choice] || decision.choice) + '</span> <button onclick="openClashModal(\'' + s.date + '\',\'' + myClash.sessionA.course.code + '\',\'' + myClash.sessionB.course.code + '\')" class="text-[10px] text-slate-500 hover:text-indigo-400 underline ml-1">Change</button></div>';
+          } else {
+            decisionBadge = '<div class="mt-1"><button onclick="openClashModal(\'' + s.date + '\',\'' + myClash.sessionA.course.code + '\',\'' + myClash.sessionB.course.code + '\')" class="text-[10px] px-2 py-1 rounded bg-amber-500/10 text-amber-400 border border-amber-500/30 hover:bg-amber-500/20 transition-colors">&#9888; Resolve clash</button></div>';
+          }
         }
 
         rowsHtml += '<div class="session-row flex flex-col gap-1 p-3 rounded-xl ' + (isToday ? 'bg-indigo-500/5 border border-indigo-500/20' : 'border-b border-slate-800/50') + ' ' + (isPast && !st ? 'opacity-60' : '') + ' ' + btbClass + '">' +
@@ -669,10 +910,11 @@
             '<div class="shrink-0">' + attBtn(s.date, code, s.slot, true) + '</div>' +
           '</div>' +
           clashHtml +
+          decisionBadge +
         '</div>';
       }
 
-      document.getElementById('modal-body').innerHTML = '<div class="space-y-1">' + rowsHtml + '</div>';
+      document.getElementById('modal-body').innerHTML = clashHistoryHtml + '<div class="space-y-1">' + rowsHtml + '</div>';
       document.getElementById('course-modal').classList.remove('hidden');
       document.body.style.overflow = 'hidden';
     }
@@ -806,6 +1048,8 @@
     // Init
     setInterval(updateClock, 30000);
     updateClock();
+    const profile = getProfile();
+    if (!profile.setupComplete) { openSetupModal(); }
     renderHomeTab();
   </script>
 </body>
