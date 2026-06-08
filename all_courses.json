@@ -2477,15 +2477,15 @@
       "faculty": "Prof. Shivani Sharma",
       "credits": 2,
       "sisterAllowed": true,
-      "startDate": "2026-06-25",
+      "startDate": "2026-06-27",
       "endDate": "2026-08-05",
       "totalSessions": 10,
       "sessions": [
         {
-          "date": "2026-06-25",
-          "day": "Thursday",
-          "slot": 3,
-          "time": "10:30 am - 11:45 am",
+          "date": "2026-06-28",
+          "day": "Sunday",
+          "slot": 2,
+          "time": "9:00 am - 10:15 am",
           "classroom": "SRC-201",
           "sessionNum": 1
         },
@@ -2569,15 +2569,15 @@
       "faculty": "Prof. Shivani Sharma",
       "credits": 2,
       "sisterAllowed": true,
-      "startDate": "2026-06-25",
+      "startDate": "2026-06-27",
       "endDate": "2026-08-05",
       "totalSessions": 10,
       "sessions": [
         {
-          "date": "2026-06-25",
-          "day": "Thursday",
-          "slot": 4,
-          "time": "12 noon - 1:15 pm",
+          "date": "2026-06-28",
+          "day": "Sunday",
+          "slot": 3,
+          "time": "10:30 am - 11:45 am",
           "classroom": "SRC-201",
           "sessionNum": 1
         },
