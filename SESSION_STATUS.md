@@ -79,15 +79,15 @@
 - [ ] **Decide timing option:**
   - Option A: Keep GitHub Actions (free, approximate timing).
   - Option B: Disable GitHub Actions and use Windows Task Scheduler for exact 21:00 IST.
-- [ ] **Commit and push** the code changes once the test email is confirmed correct. Note: the latest timetable update is ready to commit along with the email fixes.
+- [x] **Commit and push** the code changes. Pushed to origin/main as `f577716` on 2026-06-19.
 
 ---
 
 ## Important reminders
 
-- Do **not** commit or push until the test email is verified.
+- Commit/push completed on 2026-06-19; test email verification is still recommended.
 - If using the local scheduler, disable the GitHub Actions workflow to avoid duplicate emails.
-- The pre-existing uncommitted changes (`index.html`, `all_courses.json`, `courses.json`, deleted HTML files, clash report scripts) are still in the working tree and were not modified by this session's fixes.
+- The latest timetable Excel file is kept outside git (root copy untracked, `docs/` gitignored); JSON files are the dashboard source of truth.
 
 ---
 
