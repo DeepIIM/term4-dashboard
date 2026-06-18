@@ -2,8 +2,12 @@ name: Daily Course Reminder
 
 on:
   schedule:
-    # Runs at 15:30 UTC every day = 21:00 IST
-    - cron: '30 15 * * *'
+    # Target: send at ~21:00 IST the day before classes.
+    # GitHub Actions scheduled runs are queued and can be delayed at busy times,
+    # especially on the hour. We schedule ~80 minutes earlier (19:43 IST / 14:13 UTC)
+    # using an off-peak minute to reduce queue delays.
+    # For exact 21:00 IST timing, use the free local scheduler guide in README.md.
+    - cron: '13 14 * * *'
   workflow_dispatch:  # Allow manual trigger for testing
 
 jobs:
@@ -26,4 +30,5 @@ jobs:
         env:
           RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
           EMAIL_TO: ${{ secrets.EMAIL_TO }}
+          COURSES_JSON: ${{ secrets.COURSES_JSON }}
         run: python scripts/send_reminder.py

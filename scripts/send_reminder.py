@@ -1,18 +1,29 @@
 """
 Daily Course Reminder Email Sender
-Reads courses.json and sends an HTML email with tomorrow's schedule.
+Reads your personal course bundle and sends an HTML email with tomorrow's schedule.
 Designed to run via GitHub Actions cron or locally.
 
 Environment variables:
   RESEND_API_KEY  - Your Resend API key
   EMAIL_TO        - Your email address
+  COURSES_JSON    - Your personal course bundle as a JSON string (required in GitHub Actions).
+                    In local testing, courses.json is used as a fallback.
+
+Why COURSES_JSON is required in GitHub Actions:
+  The committed courses.json contains the original repository owner's timetable.
+  If a friend forks the repo and only changes RESEND_API_KEY / EMAIL_TO, they would
+  receive the owner's timetable. Reading the bundle from a GitHub Secret ensures every
+  fork uses its own private timetable.
 """
 
 import json
 import os
 import sys
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
+
+# IST timezone offset (UTC+5:30)
+IST = timezone(timedelta(hours=5, minutes=30))
 
 # Try to import resend, fallback to requests
 try:
@@ -24,6 +35,30 @@ except ImportError:
 
 
 def load_courses():
+    # In GitHub Actions, the personal bundle must come from a repository secret so
+    # that each fork uses its own timetable instead of the original owner's.
+    courses_json_env = os.environ.get("COURSES_JSON")
+    if courses_json_env:
+        try:
+            return json.loads(courses_json_env)
+        except json.JSONDecodeError as e:
+            print(f"ERROR: COURSES_JSON is not valid JSON: {e}")
+            sys.exit(1)
+
+    if os.environ.get("GITHUB_ACTIONS") == "true":
+        print("ERROR: COURSES_JSON repository secret is not set.")
+        print("In GitHub Actions, your personal course bundle must be supplied via the")
+        print("COURSES_JSON repository secret so that your fork uses YOUR courses,")
+        print("not the original repository owner's courses.")
+        print("\nTo get your bundle JSON:")
+        print("1. Open your dashboard and pick your courses in the bundle picker.")
+        print("2. Open browser DevTools -> Console and run:")
+        print("   copy(localStorage.getItem('term4_bundle'))")
+        print("3. In your GitHub repo, go to Settings -> Secrets and variables -> Actions.")
+        print("4. Create a new repository secret named COURSES_JSON and paste the copied JSON.")
+        sys.exit(1)
+
+    # Local fallback to committed courses.json (for backward compatibility / local testing)
     script_dir = Path(__file__).parent.resolve()
     json_path = script_dir.parent / "courses.json"
     with open(json_path, "r", encoding="utf-8") as f:
@@ -31,7 +66,8 @@ def load_courses():
 
 
 def get_tomorrow_sessions(data):
-    tomorrow = (datetime.now() + timedelta(days=1)).date().isoformat()
+    # Use IST timezone so "tomorrow" is always correct for the user's timezone
+    tomorrow = (datetime.now(IST) + timedelta(days=1)).date().isoformat()
     sessions = []
     for course in data["courses"]:
         for s in course["sessions"]:
@@ -210,7 +246,7 @@ def build_email_html(tomorrow_str, sessions, data):
                     Term-IV Dashboard &#8226; PGP 2025-27
                   </p>
                   <p style="color: #334155; font-size: 11px; margin: 4px 0 0;">
-                    Sent automatically at 9:00 PM IST
+                    Sent automatically around 9:00 PM IST
                   </p>
                 </td>
               </tr>

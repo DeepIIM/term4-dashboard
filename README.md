@@ -12,7 +12,7 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 | `courses.json` | Your extracted timetable data (9 courses, 95 sessions) with sister section data |
 | `all_courses.json` | Full timetable data for ALL 105 course-sections (for course picker) |
 | `scripts/send_reminder.py` | Sends nightly HTML email with tomorrow's schedule + clash suggestions |
-| `.github/workflows/daily-reminder.yml` | GitHub Actions cron — runs daily at 21:00 IST |
+| `.github/workflows/daily-reminder.yml` | GitHub Actions cron — runs daily around 21:00 IST (see timing note below) |
 
 ---
 
@@ -30,7 +30,7 @@ Dark-themed personal dashboard + automated nightly email reminders for your Term
 | M&A | Mergers and Acquisitions | 3 | Aug 7 |
 | SS-G | Strategy Simulation | 3 | Jul 20 |
 
-**Clashes:** 5 total — 4 manageable (sister section workaround), 1 rigid (MSN × SS-G)
+**Clashes:** 1 total — 1 rigid (CCR × M&A)
 
 ---
 
@@ -86,8 +86,20 @@ In your GitHub repo:
 2. Click **New repository secret**
 3. Add `RESEND_API_KEY` = your Resend API key
 4. Add `EMAIL_TO` = your email address
+5. Add `COURSES_JSON` = your personal course bundle JSON (see below)
 
-Done! The GitHub Actions workflow will run every day at 21:00 IST and email you tomorrow's schedule.
+Done! The GitHub Actions workflow will run every day around 21:00 IST and email you tomorrow's schedule.
+
+**Why `COURSES_JSON` is required:**  
+The email script needs YOUR personal course bundle, not the shared `courses.json` file in the repo. Storing it as a GitHub Secret keeps it private and ensures that if a friend forks your repo, they only receive emails for their own courses (once they add their own `COURSES_JSON` secret).
+
+**How to get your `COURSES_JSON`:**
+1. Open your live dashboard and pick your courses in the bundle picker
+2. Open browser DevTools → Console and run:
+   ```js
+   copy(localStorage.getItem('term4_bundle'))
+   ```
+3. Paste the copied JSON into the `COURSES_JSON` secret value field
 
 ---
 
@@ -113,12 +125,14 @@ Want a friend to use this dashboard for their own courses? Here's how:
    ```js
    copy(localStorage.getItem('term4_bundle'))
    ```
-   Paste the copied JSON into a file named `courses.json` in their fork
 5. They add their own GitHub Secrets:
+   - `COURSES_JSON` — paste the copied JSON from step 4
    - `RESEND_API_KEY` — their Resend API key
    - `EMAIL_TO` — their email address
 6. They enable GitHub Actions in their fork
 7. Daily emails now work for their bundle!
+
+> **Important:** The email script reads from the `COURSES_JSON` secret, not from `courses.json`. If `COURSES_JSON` is missing, the workflow will fail with instructions instead of accidentally sending the original owner's timetable.
 
 ---
 
@@ -146,8 +160,14 @@ Or trigger the workflow manually:
 - **Frontend:** Vanilla HTML + Tailwind CSS CDN (no build step)
 - **Data:** Static JSON extracted from official Excel timetable
 - **Email:** Resend API (free tier: 100 emails/day)
-- **Scheduler:** GitHub Actions cron (free)
+- **Scheduler:** GitHub Actions cron (free, approximate timing)
 - **Hosting:** GitHub Pages (free)
+
+## Email Timing Note
+
+GitHub Actions scheduled runs are **best-effort** and can be delayed by minutes or even hours during busy periods. The workflow is scheduled for an off-peak minute to reduce this, but it may still arrive at 23:00, 23:40, or later.
+
+For **exact 21:00 IST delivery**, use the free local scheduler guide in [`LOCAL_SCHEDULER_GUIDE.md`](LOCAL_SCHEDULER_GUIDE.md). This runs the same script on your own computer at exactly the right time, with no 3rd-party service needed.
 
 ---
 

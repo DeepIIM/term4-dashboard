@@ -1,6 +1,6 @@
 # Friend Setup Guide — Term-IV Dashboard
 
-> **TL;DR:** Fork this repo → Enable GitHub Pages → Add your Resend API key → Done. Takes 5 minutes.
+> **TL;DR:** Fork this repo → Enable GitHub Pages → Pick your courses → Add your Resend API key + course bundle → Done. Takes 5 minutes.
 
 ---
 
@@ -64,14 +64,15 @@ Your own personal Term-IV dashboard with:
 
 1. In your forked repo, go to **Settings** → **Secrets and variables** → **Actions**
 2. Click **New repository secret**
-3. Add two secrets:
+3. Add three secrets:
 
 | Name | Value |
 |---|---|
+| `COURSES_JSON` | Your personal course bundle JSON (see step 3 above) |
 | `RESEND_API_KEY` | Your Resend API key (e.g. `re_xxxxxx`) |
 | `EMAIL_TO` | Your email address (where reminders go) |
 
-4. The GitHub Actions workflow will run automatically every day at **9:00 PM IST** (15:30 UTC)
+4. The GitHub Actions workflow will run automatically every day **around 9:00 PM IST**
 
 ### 4c. Test It Now
 
@@ -126,7 +127,8 @@ Your own personal Term-IV dashboard with:
 | Problem | Fix |
 |---|---|
 | Dashboard shows old/broken data | Hard refresh: `Ctrl + Shift + R` (Windows) or `Cmd + Shift + R` (Mac) |
-| Emails not arriving | Check spam folder. Verify `RESEND_API_KEY` and `EMAIL_TO` secrets are correct. |
+| Emails not arriving | Check spam folder. Verify `RESEND_API_KEY`, `EMAIL_TO`, and `COURSES_JSON` secrets are correct. |
+| Emails show someone else's classes | You forgot to add the `COURSES_JSON` secret with your own bundle. See Step 3. |
 | Bundle picker won't open | The page needs to be served over HTTP (not `file://`). Use GitHub Pages or run `python -m http.server` locally. |
 | Clash decisions disappear | Decisions are stored per-browser. If you switch devices, they won't sync. Use the same browser/profile. |
 | Want to change my email | Go to repo Settings → Secrets → edit `EMAIL_TO` |
@@ -136,8 +138,12 @@ Your own personal Term-IV dashboard with:
 ## Data Privacy
 
 - **Your attendance** and **clash decisions** stay in your browser only
-- **Your email** and **Resend API key** stay in your GitHub secrets only
+- **Your email**, **Resend API key**, and **course bundle** stay in your GitHub secrets only
 - No data is sent to any server except Resend (for your own email reminders)
+
+## Exact Email Timing (Optional)
+
+GitHub Actions scheduled runs can be delayed. If you want your email at exactly 9:00 PM IST, follow the free local scheduler guide in [`LOCAL_SCHEDULER_GUIDE.md`](LOCAL_SCHEDULER_GUIDE.md).
 
 ---
 
