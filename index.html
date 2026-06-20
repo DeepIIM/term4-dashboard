@@ -20,25 +20,52 @@
   <style>
     body { font-family: 'Inter', sans-serif; }
     .glass { background: rgba(30, 41, 59, 0.6); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); }
-    .card-hover { transition: all 0.2s ease; cursor: pointer; }
-    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 48px -12px rgba(0,0,0,0.6); }
+    .glass-strong { background: rgba(15, 23, 42, 0.85); backdrop-filter: blur(16px); border: 1px solid rgba(255,255,255,0.08); }
+    .card-hover { transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; }
+    .card-hover:hover { transform: translateY(-4px) scale(1.01); box-shadow: 0 20px 60px -15px rgba(99, 102, 241, 0.25); border-color: rgba(99, 102, 241, 0.25); }
     .tab-btn { transition: all 0.2s ease; position: relative; }
     .tab-btn.active { color: #fff; }
-    .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 2px; }
+    .tab-btn.active::after { content: ''; position: absolute; bottom: -1px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, #6366f1, #8b5cf6); border-radius: 2px; animation: slideIn 0.3s ease-out; }
     .tab-btn:not(.active):hover { color: #cbd5e1; }
     .session-row { transition: background 0.15s ease; }
     .session-row:hover { background: rgba(255,255,255,0.03); }
-    .animate-fade { animation: fadeIn 0.3s ease-out; }
-    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .animate-fade { animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-slide-up { animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
+    .animate-pop { animation: popIn 0.35s cubic-bezier(0.34, 1.56, 0.64, 1); }
+    .animate-shimmer { background: linear-gradient(90deg, transparent, rgba(255,255,255,0.08), transparent); background-size: 200% 100%; animation: shimmer 2s infinite; }
+    .animate-pulse-slow { animation: pulseSlow 3s ease-in-out infinite; }
+    .animate-float { animation: float 4s ease-in-out infinite; }
+    .animate-gradient { background-size: 200% 200%; animation: gradientMove 5s ease infinite; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes slideIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+    @keyframes popIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+    @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+    @keyframes pulseSlow { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
+    @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    @keyframes gradientMove { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+    @keyframes confetti-fall { 0% { transform: translateY(-10vh) rotate(0deg); opacity: 1; } 100% { transform: translateY(110vh) rotate(720deg); opacity: 0; } }
     .back-to-back { border-left: 2px solid rgba(99, 102, 241, 0.4); }
     .scrollbar-hide::-webkit-scrollbar { display: none; }
     .picker-course { transition: all 0.15s ease; }
     .picker-course:hover { background: rgba(99,102,241,0.1); }
     .clash-suggestion { background: rgba(245, 158, 11, 0.1); border: 1px solid rgba(245, 158, 11, 0.25); }
     .clash-rigid { background: rgba(244, 63, 94, 0.1); border: 1px solid rgba(244, 63, 94, 0.25); }
+    .progress-shimmer { position: relative; overflow: hidden; }
+    .progress-shimmer::after { content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent); animation: shimmer 1.8s infinite; }
+    .glow-indigo { box-shadow: 0 0 20px rgba(99, 102, 241, 0.15); }
+    .ring-spin { animation: ringSpin 2s linear infinite; }
+    @keyframes ringSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .confetti { position: fixed; width: 8px; height: 8px; pointer-events: none; z-index: 100; animation: confetti-fall 2.5s ease-out forwards; }
   </style>
 </head>
-<body class="bg-slate-950 text-slate-100 min-h-screen">
+<body class="bg-slate-950 text-slate-100 min-h-screen relative">
+    <!-- Animated background gradient orbs -->
+    <div class="fixed inset-0 pointer-events-none overflow-hidden z-0">
+      <div class="absolute -top-[20%] -left-[10%] w-[60%] h-[60%] rounded-full bg-indigo-600/10 blur-[120px] animate-float" style="animation-delay:0s"></div>
+      <div class="absolute top-[40%] -right-[10%] w-[50%] h-[50%] rounded-full bg-purple-600/10 blur-[100px] animate-float" style="animation-delay:1.5s"></div>
+      <div class="absolute -bottom-[10%] left-[20%] w-[40%] h-[40%] rounded-full bg-emerald-600/5 blur-[100px] animate-float" style="animation-delay:3s"></div>
+    </div>
 
   <!-- Navbar -->
   <nav class="glass sticky top-0 z-40 border-b border-slate-800">
@@ -69,10 +96,41 @@
     </div>
   </nav>
 
-  <main class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+  <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
 
     <!-- HOME TAB -->
     <div id="tab-home" class="tab-content animate-fade">
+      <!-- Hero Widget: Greeting + Current/Next Class -->
+      <section class="glass rounded-2xl p-5 mb-6 relative overflow-hidden animate-slide-up">
+        <div class="absolute top-0 right-0 w-64 h-64 bg-gradient-to-br from-indigo-500/10 to-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/4 pointer-events-none"></div>
+        <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <p id="greeting-text" class="text-xs font-medium text-indigo-400 mb-1 animate-pop">Hello there &#128075;</p>
+            <h2 id="hero-status" class="text-xl md:text-2xl font-bold text-white">Loading your schedule...</h2>
+            <p id="hero-sub" class="text-sm text-slate-400 mt-1">Stay on top of Term-IV</p>
+          </div>
+          <div id="countdown-widget" class="hidden md:flex flex-col items-end">
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1" id="countdown-label">Next class in</div>
+            <div class="text-3xl font-bold text-white tabular-nums" id="countdown-value">--:--</div>
+          </div>
+          <!-- Mobile-only countdown (below hero text) -->
+          <div id="countdown-widget-mobile" class="md:hidden flex flex-col items-start mt-2">
+            <div class="text-[10px] uppercase tracking-wider text-slate-500 font-semibold mb-1" id="countdown-label-mobile">Next class in</div>
+            <div class="text-2xl font-bold text-white tabular-nums" id="countdown-value-mobile">--:--</div>
+          </div>
+        </div>
+        <div id="current-class-card" class="mt-4 hidden">
+          <div class="bg-slate-900/50 border border-slate-700/50 rounded-xl p-4 flex items-center gap-4 animate-pop">
+            <div id="current-class-icon" class="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center text-white font-bold text-lg shrink-0"></div>
+            <div class="flex-1 min-w-0">
+              <div id="current-class-name" class="font-semibold text-white truncate"></div>
+              <div id="current-class-meta" class="text-xs text-slate-400"></div>
+            </div>
+            <div id="current-class-badge" class="text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium"></div>
+          </div>
+        </div>
+      </section>
+
       <!-- Stats Row -->
       <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
         <div class="glass rounded-2xl p-5 flex flex-col items-center text-center">
@@ -107,6 +165,38 @@
           </div>
           <p class="text-xs text-slate-400 font-medium">Attendance</p>
           <p id="att-detail" class="text-[10px] text-slate-600 mt-0.5">--/--</p>
+        </div>
+      </section>
+
+      <!-- Quick Insights -->
+      <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div class="glass rounded-2xl p-4 flex items-center gap-3 card-hover">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center text-lg">&#128293;</div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Streak</p>
+            <p id="streak-value" class="text-lg font-bold text-white">0 days</p>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4 flex items-center gap-3 card-hover">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-sky-500/20 to-blue-500/20 border border-sky-500/30 flex items-center justify-center text-lg">&#128197;</div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">This Week</p>
+            <p id="week-classes-value" class="text-lg font-bold text-white">0</p>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4 flex items-center gap-3 card-hover">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-emerald-500/20 to-teal-500/20 border border-emerald-500/30 flex items-center justify-center text-lg">&#9989;</div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Marked</p>
+            <p id="marked-value" class="text-lg font-bold text-white">0/0</p>
+          </div>
+        </div>
+        <div class="glass rounded-2xl p-4 flex items-center gap-3 card-hover">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rose-500/20 to-pink-500/20 border border-rose-500/30 flex items-center justify-center text-lg">&#9200;</div>
+          <div>
+            <p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Next Deadline</p>
+            <p id="deadline-value" class="text-lg font-bold text-white">--</p>
+          </div>
         </div>
       </section>
 
@@ -279,6 +369,31 @@
     }
     const STORAGE_KEY = getStorageKey();
 
+    // ─── Date helpers (use LOCAL date so IST users see correct "today") ───
+    function getLocalDateStr(d = new Date()) {
+      const year = d.getFullYear();
+      const month = String(d.getMonth() + 1).padStart(2, '0');
+      const day = String(d.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    }
+    function parseTimeRange(timeStr, dateStr) {
+      // Handle both "9:00 am - 10:15 am" and "12 noon - 1:15 pm"
+      const normalized = timeStr.replace(/(\d{1,2})\s*noon/gi, '$1:00 pm');
+      const m = normalized.match(/(\d{1,2}):(\d{2})\s*(am|pm)\s*-\s*(\d{1,2}):(\d{2})\s*(am|pm)/i);
+      if (!m) return null;
+      const toMin = (h, mm, ap) => {
+        let hour = parseInt(h, 10);
+        const minute = parseInt(mm, 10);
+        if (ap.toLowerCase() === 'pm' && hour !== 12) hour += 12;
+        if (ap.toLowerCase() === 'am' && hour === 12) hour = 0;
+        return hour * 60 + minute;
+      };
+      return {
+        startMin: toMin(m[1], m[2], m[3]),
+        endMin: toMin(m[4], m[5], m[6])
+      };
+    }
+
     // ─── Profile & Clash Decisions ───
     const PROFILE_KEY = 'term4_profile';
     const CLASH_DECISIONS_KEY = 'term4_clash_decisions';
@@ -429,7 +544,7 @@
     function getStatus(date, code, slot) { return getAttendance()[date + '_' + code + '_' + slot] || null; }
     function getCourseStats(code) {
       const c = data.courses.find(x => x.code === code);
-      const today = new Date().toISOString().split('T')[0];
+      const today = getLocalDateStr();
       let present = 0, absent = 0, done = 0;
       c.sessions.forEach(s => {
         if (s.date <= today) {
@@ -442,22 +557,23 @@
       return { present, absent, done, total: c.sessions.length, rate: done ? Math.round((present / done) * 100) : 0 };
     }
     function getOverallAttendance() {
-      const today = new Date().toISOString().split('T')[0];
-      let present = 0, absent = 0, marked = 0;
+      const today = getLocalDateStr();
+      let present = 0, absent = 0, marked = 0, doneEligible = 0;
       data.courses.forEach(c => c.sessions.forEach(s => {
         if (s.date <= today) {
+          doneEligible++;
           const st = getStatus(s.date, c.code, s.slot);
           if (st === 'present') { present++; marked++; }
           else if (st === 'absent') { absent++; marked++; }
         }
       }));
-      return { present, absent, marked, rate: marked ? Math.round((present / marked) * 100) : 0 };
+      return { present, absent, marked, doneEligible, rate: marked ? Math.round((present / marked) * 100) : 0 };
     }
     function exportAttendance() {
       const payload = { bundle: data.courses.map(c => c.code), attendance: getAttendance() };
       const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'attendance_' + new Date().toISOString().split('T')[0] + '.json'; a.click(); URL.revokeObjectURL(url);
+      const a = document.createElement('a'); a.href = url; a.download = 'attendance_' + getLocalDateStr() + '.json'; a.click(); URL.revokeObjectURL(url);
     }
     function resetAttendance() { if (confirm('Reset all attendance data?')) { localStorage.removeItem(STORAGE_KEY); renderHomeTab(); renderCoursesTab(); renderCalendarTab(); } }
 
@@ -541,17 +657,202 @@
         '</div>';
     }
 
+    // ─── Animated helpers ───
+    function animateValue(id, start, end, duration, suffix = '') {
+      const el = document.getElementById(id);
+      if (!el) return;
+      if (start === end) { el.textContent = end + suffix; return; }
+      const range = end - start;
+      const startTime = performance.now();
+      function step(now) {
+        const progress = Math.min((now - startTime) / duration, 1);
+        const value = Math.floor(start + range * (1 - Math.pow(1 - progress, 3)));
+        el.textContent = value + suffix;
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+
+    function fireConfetti() {
+      const colors = ['#6366f1', '#8b5cf6', '#10b981', '#f59e0b', '#f43f5e', '#06b6d4'];
+      for (let i = 0; i < 60; i++) {
+        const c = document.createElement('div');
+        c.className = 'confetti';
+        c.style.left = Math.random() * 100 + 'vw';
+        c.style.top = '-10px';
+        c.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        c.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+        c.style.animationDuration = (2 + Math.random() * 1.5) + 's';
+        c.style.animationDelay = (Math.random() * 0.5) + 's';
+        document.body.appendChild(c);
+        setTimeout(() => c.remove(), 4000);
+      }
+    }
+
+    function getGreeting() {
+      const hour = new Date().getHours();
+      if (hour < 12) return 'Good morning';
+      if (hour < 17) return 'Good afternoon';
+      return 'Good evening';
+    }
+
+    function getAllSessions() {
+      const list = [];
+      data.courses.forEach(c => c.sessions.forEach(s => list.push({ ...s, course: c })));
+      return list.sort((a, b) => (a.date + String(a.slot).padStart(2, '0')).localeCompare(b.date + String(b.slot).padStart(2, '0')));
+    }
+
+    function getCurrentOrNextSession() {
+      const now = new Date();
+      const todayStr = getLocalDateStr(now);
+      const all = getAllSessions();
+      const currentMin = now.getHours() * 60 + now.getMinutes();
+      for (const s of all) {
+        if (s.date < todayStr) continue;
+        const tr = parseTimeRange(s.time, s.date);
+        if (s.date === todayStr && tr) {
+          if (currentMin >= tr.startMin - 15 && currentMin <= tr.endMin) {
+            return { type: 'current', session: s, endsIn: tr.endMin - currentMin };
+          }
+          if (tr.startMin > currentMin) {
+            return { type: 'next', session: s, startsIn: tr.startMin - currentMin };
+          }
+        } else if (s.date > todayStr) {
+          return { type: 'next', session: s, startsIn: null };
+        }
+      }
+      return null;
+    }
+
+    function updateHeroWidget() {
+      const greetingEl = document.getElementById('greeting-text');
+      const statusEl = document.getElementById('hero-status');
+      const subEl = document.getElementById('hero-sub');
+      const countdownEl = document.getElementById('countdown-widget');
+      const countdownLabel = document.getElementById('countdown-label');
+      const countdownValue = document.getElementById('countdown-value');
+      const countdownMobileEl = document.getElementById('countdown-widget-mobile');
+      const countdownMobileLabel = document.getElementById('countdown-label-mobile');
+      const countdownMobileValue = document.getElementById('countdown-value-mobile');
+      const currentCard = document.getElementById('current-class-card');
+      const currentIcon = document.getElementById('current-class-icon');
+      const currentName = document.getElementById('current-class-name');
+      const currentMeta = document.getElementById('current-class-meta');
+      const currentBadge = document.getElementById('current-class-badge');
+
+      function setCountdown(label, value) {
+        if (countdownLabel) countdownLabel.textContent = label;
+        if (countdownValue) countdownValue.textContent = value;
+        if (countdownMobileLabel) countdownMobileLabel.textContent = label;
+        if (countdownMobileValue) countdownMobileValue.textContent = value;
+      }
+
+      if (greetingEl) greetingEl.textContent = getGreeting() + ' &#128075;';
+
+      const state = getCurrentOrNextSession();
+      if (!state) {
+        statusEl.textContent = 'No more classes scheduled';
+        subEl.textContent = 'Enjoy your free time!';
+        if (countdownEl) countdownEl.classList.add('hidden');
+        if (countdownMobileEl) countdownMobileEl.classList.add('hidden');
+        if (currentCard) currentCard.classList.add('hidden');
+        return;
+      }
+
+      const s = state.session;
+      const col = getCourseColor(s.course.code);
+      if (currentCard) currentCard.classList.remove('hidden');
+      if (countdownEl) countdownEl.classList.remove('hidden');
+      if (countdownMobileEl) countdownMobileEl.classList.remove('hidden');
+      if (currentIcon) {
+        currentIcon.className = 'w-12 h-12 rounded-xl bg-gradient-to-br ' + col.gradient + ' flex items-center justify-center text-white font-bold text-lg shrink-0';
+        currentIcon.textContent = s.course.code.split(' ')[0];
+      }
+      if (currentName) currentName.textContent = s.course.name;
+      if (currentMeta) currentMeta.textContent = s.day + ' ' + new Date(s.date).toLocaleDateString('en-IN', {month:'short', day:'numeric'}) + ' &bull; ' + s.time + ' &bull; ' + s.classroom;
+
+      if (state.type === 'current') {
+        statusEl.innerHTML = 'In class now: <span class="text-indigo-400">' + s.course.code + '</span>';
+        subEl.textContent = s.course.faculty;
+        if (currentBadge) {
+          currentBadge.textContent = 'Happening now';
+          currentBadge.className = 'text-[10px] px-2 py-1 rounded-full bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-medium animate-pulse';
+        }
+        const hours = Math.floor(state.endsIn / 60);
+        const mins = state.endsIn % 60;
+        setCountdown('Ends in', (hours > 0 ? hours + ':' : '') + String(mins).padStart(2, '0'));
+      } else {
+        statusEl.innerHTML = 'Up next: <span class="text-indigo-400">' + s.course.code + '</span>';
+        subEl.textContent = s.course.faculty;
+        if (currentBadge) {
+          currentBadge.textContent = 'Upcoming';
+          currentBadge.className = 'text-[10px] px-2 py-1 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20 font-medium';
+        }
+        if (state.startsIn !== null) {
+          const hours = Math.floor(state.startsIn / 60);
+          const mins = state.startsIn % 60;
+          setCountdown('Starts in', (hours > 0 ? hours + ':' : '') + String(mins).padStart(2, '0'));
+        } else {
+          setCountdown('Next class', new Date(s.date).toLocaleDateString('en-IN', {weekday:'short', day:'numeric'}));
+        }
+      }
+    }
+
+    function getAttendanceStreak() {
+      const att = getAttendance();
+      const today = new Date();
+      let streak = 0;
+      for (let i = 0; i < 365; i++) {
+        const d = new Date(today); d.setDate(d.getDate() - i);
+        const dStr = getLocalDateStr(d);
+        const dayKeys = Object.keys(att).filter(k => k.startsWith(dStr + '_'));
+        const hadClass = data.courses.some(c => c.sessions.some(s => s.date === dStr));
+        if (!hadClass) continue;
+        const allPresent = dayKeys.length > 0 && dayKeys.every(k => att[k] === 'present');
+        if (allPresent) {
+          streak++;
+        } else {
+          // allow today if not yet marked
+          if (i === 0 && dayKeys.length === 0) continue;
+          break;
+        }
+      }
+      return streak;
+    }
+
+    function getWeekClasses() {
+      const now = new Date();
+      const day = now.getDay();
+      const startOfWeek = new Date(now); startOfWeek.setDate(now.getDate() - day);
+      const endOfWeek = new Date(startOfWeek); endOfWeek.setDate(startOfWeek.getDate() + 6);
+      const startStr = getLocalDateStr(startOfWeek);
+      const endStr = getLocalDateStr(endOfWeek);
+      let count = 0;
+      data.courses.forEach(c => c.sessions.forEach(s => { if (s.date >= startStr && s.date <= endStr) count++; }));
+      return count;
+    }
+
+    function getNextDeadline() {
+      const todayStr = getLocalDateStr();
+      const future = [];
+      data.courses.forEach(c => {
+        if (c.endDate >= todayStr) future.push({ code: c.code, date: c.endDate, name: c.name });
+      });
+      future.sort((a, b) => a.date.localeCompare(b.date));
+      return future[0] || null;
+    }
+
     // ─── Clock ───
     function updateClock() {
       const n = new Date();
       document.getElementById('current-date').textContent = n.toLocaleDateString('en-IN', { weekday: 'short', month: 'short', day: 'numeric' });
-      document.getElementById('current-time').textContent = n.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('current-time').textContent = n.toLocaleTimeString('en-IN', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
     }
 
     // HOME TAB
     function renderHomeTab() {
       const now = new Date();
-      const todayStr = now.toISOString().split('T')[0];
+      const todayStr = getLocalDateStr(now);
       const termStart = new Date(data.termStart);
       const termEnd = new Date(data.termEnd);
       const profile = getProfile();
@@ -597,7 +898,7 @@
       const checkDate = new Date(now);
       for (let i = 0; i < 60; i++) {
         checkDate.setDate(checkDate.getDate() + 1);
-        const dStr = checkDate.toISOString().split('T')[0];
+        const dStr = getLocalDateStr(checkDate);
         if (!sessionDates.has(dStr)) { nextFree = dStr; freeDaysCount = i + 1; break; }
       }
       document.getElementById('free-days').textContent = nextFree ? freeDaysCount : '--';
@@ -608,9 +909,20 @@
       document.getElementById('att-ring').style.setProperty('--progress', overall.rate + '%');
       document.getElementById('att-detail').textContent = overall.present + '/' + overall.marked;
 
+      // ─── Hero & Quick Insights ───
+      updateHeroWidget();
+      const streak = getAttendanceStreak();
+      document.getElementById('streak-value').textContent = streak + (streak === 1 ? ' day' : ' days');
+      document.getElementById('week-classes-value').textContent = getWeekClasses();
+      document.getElementById('marked-value').textContent = overall.marked + '/' + overall.doneEligible;
+      const nextDeadline = getNextDeadline();
+      document.getElementById('deadline-value').textContent = nextDeadline
+        ? new Date(nextDeadline.date).toLocaleDateString('en-IN', {month:'short', day:'numeric'})
+        : 'Done';
+
       renderDayList('home-today-list', 'home-today-date', todayStr, 'No classes today &#127881;');
       const tmrw = new Date(now); tmrw.setDate(tmrw.getDate() + 1);
-      renderDayList('home-tmrw-list', 'home-tmrw-date', tmrw.toISOString().split('T')[0], 'No classes tomorrow');
+      renderDayList('home-tmrw-list', 'home-tmrw-date', getLocalDateStr(tmrw), 'No classes tomorrow');
 
       // ─── Upcoming Clashes Tracker ───
       const clashEl = document.getElementById('home-clash-list');
@@ -618,7 +930,7 @@
         const upcomingClashes = [];
         for (let i = 0; i < 21; i++) {
           const d = new Date(now); d.setDate(d.getDate() + i);
-          const dStr = d.toISOString().split('T')[0];
+          const dStr = getLocalDateStr(d);
           const dayClashes = findClashes(dStr);
           dayClashes.forEach(c => upcomingClashes.push({ ...c, date: dStr }));
         }
@@ -650,17 +962,24 @@
       }
 
       const progressEl = document.getElementById('home-progress-list');
+      const celebratedKey = 'term4_celebrated_' + getStorageKey();
+      const celebrated = JSON.parse(localStorage.getItem(celebratedKey) || '[]');
       progressEl.innerHTML = data.courses.map(c => {
         const stats = getCourseStats(c.code);
         const col = getCourseColor(c.code);
         const donePct = Math.round((stats.done / stats.total) * 100);
+        if (donePct === 100 && !celebrated.includes(c.code)) {
+          celebrated.push(c.code);
+          localStorage.setItem(celebratedKey, JSON.stringify(celebrated));
+          setTimeout(fireConfetti, 300);
+        }
         return '<div class="flex items-center gap-3">' +
           '<div class="w-20 shrink-0">' +
             '<div class="text-xs font-bold ' + col.text + '">' + c.code + '</div>' +
             '<div class="text-[10px] text-slate-500">' + stats.done + '/' + stats.total + ' done</div>' +
           '</div>' +
-          '<div class="flex-1 h-2.5 bg-slate-800 rounded-full overflow-hidden">' +
-            '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-500" style="width:' + donePct + '%"></div>' +
+          '<div class="flex-1 h-2.5 bg-slate-800 rounded-full overflow-hidden progress-shimmer">' +
+            '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-700" style="width:' + donePct + '%"></div>' +
           '</div>' +
           '<div class="w-12 text-right shrink-0"><div class="text-xs font-bold text-white">' + donePct + '%</div></div>' +
           `<button onclick="switchTab('courses'); setTimeout(()=>openCourseModal('${c.code}'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>` +
@@ -729,26 +1048,27 @@
     // COURSES TAB
     function renderCoursesTab() {
       const el = document.getElementById('courses-grid');
-      el.innerHTML = data.courses.map(c => {
+      el.innerHTML = data.courses.map((c, idx) => {
         const col = getCourseColor(c.code);
         const stats = getCourseStats(c.code);
         const donePct = Math.round((stats.done / stats.total) * 100);
-        return `<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden" onclick="openCourseModal('${c.code}')">` +
+        return `<div class="glass rounded-2xl p-5 card-hover relative overflow-hidden animate-pop" style="animation-delay:${idx * 60}ms" onclick="openCourseModal('${c.code}')">` +
           '<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r ' + col.gradient + '"></div>' +
-          '<div class="flex justify-between items-start mb-3">' +
+          '<div class="absolute -bottom-8 -right-8 w-24 h-24 bg-gradient-to-br ' + col.gradient + ' opacity-10 rounded-full blur-2xl"></div>' +
+          '<div class="flex justify-between items-start mb-3 relative z-10">' +
             '<span class="text-[10px] font-bold px-2 py-1 rounded bg-slate-800 text-slate-300 tracking-wide">' + c.code + '</span>' +
             '<span class="text-lg font-bold ' + col.text + '">' + c.credits + 'cr</span>' +
           '</div>' +
-          '<h3 class="font-bold text-white text-base leading-snug mb-1">' + c.name + '</h3>' +
-          '<p class="text-xs text-slate-400 mb-4">' + c.faculty + '</p>' +
-          '<div class="flex items-center justify-between text-xs mb-1.5">' +
+          '<h3 class="font-bold text-white text-base leading-snug mb-1 relative z-10">' + c.name + '</h3>' +
+          '<p class="text-xs text-slate-400 mb-4 relative z-10">' + c.faculty + '</p>' +
+          '<div class="flex items-center justify-between text-xs mb-1.5 relative z-10">' +
             '<span class="text-slate-500">Classes Done</span>' +
             '<span class="font-semibold text-white">' + stats.done + '/' + stats.total + '</span>' +
           '</div>' +
-          '<div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-4">' +
-            '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-500" style="width:' + donePct + '%"></div>' +
+          '<div class="h-2 bg-slate-800 rounded-full overflow-hidden mb-4 progress-shimmer relative z-10">' +
+            '<div class="h-full bg-gradient-to-r ' + col.gradient + ' rounded-full transition-all duration-700" style="width:' + donePct + '%"></div>' +
           '</div>' +
-          '<div class="flex items-center justify-between">' +
+          '<div class="flex items-center justify-between relative z-10">' +
             '<div class="flex items-center gap-2">' +
               '<span class="text-xs text-slate-500">Attendance</span>' +
               '<span class="text-xs font-bold ' + (stats.rate >= 75 ? 'text-emerald-400' : stats.rate >= 50 ? 'text-amber-400' : 'text-rose-400') + '">' + stats.rate + '%</span>' +
@@ -776,7 +1096,7 @@
 
       let html = '<div class="space-y-8">';
       const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getLocalDateStr();
 
       months.forEach(({ year, month, label }) => {
         const firstDay = new Date(year, month, 1);
@@ -791,8 +1111,8 @@
           const sessions = sessionMap[dateStr] || [];
           const isToday = dateStr === todayStr;
           const isPast = dateStr < todayStr;
-          let cellClass = 'min-h-[72px] rounded-lg p-1.5 border ';
-          if (isToday) cellClass += 'bg-indigo-500/10 border-indigo-500/30';
+          let cellClass = 'min-h-[72px] rounded-lg p-1.5 border transition-all duration-200 hover:border-slate-600 hover:bg-slate-800/40 ';
+          if (isToday) cellClass += 'bg-indigo-500/10 border-indigo-500/40 shadow-[0_0_15px_rgba(99,102,241,0.15)]';
           else if (isPast) cellClass += 'bg-slate-900/40 border-slate-800/40 opacity-60';
           else cellClass += 'bg-slate-900/20 border-slate-800/30';
 
@@ -811,7 +1131,7 @@
             const col = getCourseColor(s.course.code);
             const st = getStatus(s.date, s.course.code, s.slot);
             const dot = st === 'present' ? '&#128994;' : st === 'absent' ? '&#128308;' : '&#9898;';
-            html += `<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ${col.gradient} text-white font-medium cursor-pointer hover:opacity-90" onclick="event.stopPropagation();openCourseModal('${s.course.code}')" title="${s.course.name} | ${s.time}">${dot} ${s.course.code}</div>`;
+            html += `<div class="text-[9px] truncate rounded px-1 py-0.5 mb-0.5 bg-gradient-to-r ${col.gradient} text-white font-medium cursor-pointer hover:opacity-90 hover:scale-[1.02] hover:shadow-md transition-all" onclick="event.stopPropagation();openCourseModal('${s.course.code}')" title="${s.course.name} | ${s.time}">${dot} ${s.course.code}</div>`;
           });
           html += '</div>';
         }
@@ -826,7 +1146,7 @@
       const c = data.courses.find(x => x.code === code);
       const col = getCourseColor(code);
       const stats = getCourseStats(code);
-      const todayStr = new Date().toISOString().split('T')[0];
+      const todayStr = getLocalDateStr();
 
       let sisterHtml = '';
       if (c.sisterSection) {
@@ -1066,8 +1386,9 @@
     });
 
     // Init
-    setInterval(updateClock, 30000);
+    setInterval(updateClock, 1000);
     updateClock();
+    setInterval(updateHeroWidget, 60000);
     const profile = getProfile();
     if (!profile.setupComplete) { openSetupModal(); }
     renderHomeTab();
