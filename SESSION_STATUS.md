@@ -23,6 +23,9 @@
 - Added a `dataVersion` hash computed from each course's session count + start/end dates.
 - On load, if the saved bundle's `dataVersion` does not match the current `DEFAULT_DATA`, the dashboard refreshes each saved course's session data from the latest timetable while preserving the user's course selection and attendance records.
 - New bundles saved via the picker also store `dataVersion`.
+- Added a stale-data banner with a one-click "Clear saved data & reload" button.
+- Added a "Clear Data" button in the navbar to wipe `localStorage` and hard-reload.
+- Added no-cache meta tags to discourage browser/GitHub Pages caching.
 - Added a version badge and hard-refresh hint in the footer.
 
 ### Problem 3: Dashboard looked dull
