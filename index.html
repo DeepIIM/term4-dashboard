@@ -246,7 +246,7 @@
       </div>
     </div>
 
-    <footer class="text-center text-[11px] text-slate-700 py-10 mt-4">Term-IV PGP 2025-27 &bull; Attendance saved locally</footer>
+    <footer class="text-center text-[11px] text-slate-700 py-10 mt-4">Term-IV PGP 2025-27 &bull; Attendance saved locally &bull; <span id="footer-version">v</span> &bull; Hard-refresh (Ctrl+Shift+R) if data looks old</footer>
   </main>
 
   <!-- Course Detail Modal -->
@@ -345,6 +345,18 @@
     let allCoursesData = null;
     let selectedBundle = [];
 
+    // Compute a simple version hash for course data
+    function computeDataVersion(courses) {
+      const str = courses.map(c => c.code + '|' + c.totalSessions + '|' + c.startDate + '|' + c.endDate).join('||');
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = ((hash << 5) - hash) + str.charCodeAt(i);
+        hash |= 0;
+      }
+      return Math.abs(hash).toString(36);
+    }
+    const DEFAULT_VERSION = computeDataVersion(DEFAULT_DATA.courses);
+
     // Try to load user's saved bundle
     const BUNDLE_KEY = 'term4_bundle';
     const savedBundle = localStorage.getItem(BUNDLE_KEY);
@@ -352,7 +364,30 @@
       try {
         const parsed = JSON.parse(savedBundle);
         if (parsed && parsed.courses && parsed.courses.length > 0) {
-          data = parsed;
+          // Refresh course session data if the timetable has changed
+          if (!parsed.dataVersion || parsed.dataVersion !== DEFAULT_VERSION) {
+            const refreshed = [];
+            let refreshedCount = 0;
+            parsed.courses.forEach(saved => {
+              const latest = DEFAULT_DATA.courses.find(c => c.code === saved.code);
+              if (latest) {
+                refreshed.push({ ...latest });
+                refreshedCount++;
+              } else {
+                refreshed.push(saved);
+              }
+            });
+            parsed.courses = refreshed;
+            parsed.dataVersion = DEFAULT_VERSION;
+            parsed.termStart = DEFAULT_DATA.termStart;
+            parsed.termEnd = DEFAULT_DATA.termEnd;
+            parsed.cfaDate = DEFAULT_DATA.cfaDate;
+            data = parsed;
+            localStorage.setItem(BUNDLE_KEY, JSON.stringify(parsed));
+            console.log('Refreshed ' + refreshedCount + ' courses from latest timetable');
+          } else {
+            data = parsed;
+          }
         }
       } catch(e) { console.log('Invalid saved bundle'); }
     }
@@ -985,6 +1020,9 @@
           `<button onclick="switchTab('courses'); setTimeout(()=>openCourseModal('${c.code}'), 350)" class="shrink-0 text-[10px] px-2 py-1 rounded bg-slate-800 text-slate-400 hover:text-white transition-colors">View</button>` +
         '</div>';
       }).join('');
+
+      const footerVer = document.getElementById('footer-version');
+      if (footerVer) footerVer.textContent = 'v' + DEFAULT_VERSION;
     }
 
     function renderDayList(listId, dateId, dateStr, emptyMsg) {
@@ -1362,6 +1400,7 @@
         termStart: allCoursesData.termStart,
         termEnd: allCoursesData.termEnd,
         cfaDate: allCoursesData.cfaDate,
+        dataVersion: computeDataVersion(newCourses),
         courses: newCourses,
         clashes: []
       };

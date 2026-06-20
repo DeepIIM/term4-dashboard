@@ -16,7 +16,16 @@
 - Replaced every `new Date().toISOString().split('T')[0]` call in `index.html` with the local-date helper.
 - This affects: course "done" counts, attendance eligibility, today/tomorrow lists, clash tracker, calendar highlights, and export filenames.
 
-### Problem 2: Dashboard looked dull
+### Problem 2: Saved bundle in browser held stale timetable data
+**Root cause:** The dashboard stores the selected bundle (including every session's date/time/room) in `localStorage`. When the timetable JSON was updated, returning visitors still used the old saved bundle, so sessions that had been added or moved did not appear.
+
+**Fix:**
+- Added a `dataVersion` hash computed from each course's session count + start/end dates.
+- On load, if the saved bundle's `dataVersion` does not match the current `DEFAULT_DATA`, the dashboard refreshes each saved course's session data from the latest timetable while preserving the user's course selection and attendance records.
+- New bundles saved via the picker also store `dataVersion`.
+- Added a version badge and hard-refresh hint in the footer.
+
+### Problem 3: Dashboard looked dull
 **Root cause:** Static cards, minimal motion, no live "what's happening now" context.
 
 **Fix:**
@@ -35,7 +44,7 @@
 
 | File | Status | Purpose |
 |---|---|---|
-| `index.html` | Modified | Local-date fix; new hero widget, quick insights, animations, confetti, live clock |
+| `index.html` | Modified | Local-date fix; stale-bundle refresh; new widgets, animations, confetti, live clock |
 | `courses.json` | Updated | Re-extracted from latest Excel to ensure data is current |
 | `all_courses.json` | Updated | Re-extracted full timetable (73 course-sections) |
 | `SESSION_STATUS.md` | Updated | This file |
@@ -50,6 +59,8 @@
 - Local HTTP server serves `index.html` without errors.
 - Verified `getLocalDateStr()` returns the correct IST date at early-morning boundary (e.g. 20 Jun 02:30 IST returns `2026-06-20`, not `2026-06-19`).
 - Verified `parseTimeRange()` handles normal am/pm slots and the "12 noon - 1:15 pm" slot.
+- Compared every user course session against the Excel — all 9 courses match exactly (CEDA, CCR, ACEL, GAIB, TSB, GAFW A, MSN, M&A, SS G).
+- Fetched the live GitHub Pages dashboard and confirmed it contains the local-date fix and the latest CEDA data.
 
 ---
 
@@ -69,6 +80,7 @@
 - The dashboard must be served over HTTP (not opened via `file://`) for the bundle picker to work.
 - `localStorage` holds attendance, clash decisions, and bundle selections separately per bundle.
 - JSON files (`courses.json`, `all_courses.json`) are the source of truth; the Excel in `docs/` is kept for re-extraction only.
+- If the dashboard still looks stale after a push, press **Ctrl+Shift+R** (or Cmd+Shift+R on Mac) to bypass the browser cache.
 
 ---
 
