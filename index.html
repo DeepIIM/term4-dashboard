@@ -3,6 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
   <title>Term-IV Dashboard | PGP 2025-27</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -82,6 +85,7 @@
           <button onclick="openBundlePicker()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-indigo-500/10 text-indigo-400 hover:bg-indigo-500/20 transition-colors hidden sm:block">⚙️ Bundle</button>
           <button onclick="exportAttendance()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:bg-slate-700 transition-colors hidden sm:block">Export</button>
           <button onclick="resetAttendance()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-slate-800 text-slate-300 hover:bg-rose-500/20 hover:text-rose-400 transition-colors hidden sm:block">Reset</button>
+          <button onclick="clearAllLocalData()" class="text-[11px] px-2.5 py-1.5 rounded-md bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 transition-colors hidden sm:block" title="Clear saved bundle, attendance, and profile">Clear Data</button>
           <div class="text-right ml-2">
             <p id="current-date" class="text-xs font-medium text-slate-300"></p>
             <p id="current-time" class="text-[10px] text-slate-500"></p>
@@ -97,6 +101,17 @@
   </nav>
 
   <main class="relative z-10 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- Stale Data Banner -->
+    <div id="stale-banner" class="hidden mb-4 p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-200 text-sm animate-pop">
+      <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        <div>
+          <strong class="text-amber-400">&#9888; Your saved dashboard data looks outdated.</strong>
+          <span class="block sm:inline sm:ml-2">Some sessions may be missing or shown incorrectly.</span>
+        </div>
+        <button onclick="clearAllLocalData()" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/40 hover:bg-amber-500/30 text-xs font-medium whitespace-nowrap">Clear saved data & reload</button>
+      </div>
+    </div>
 
     <!-- HOME TAB -->
     <div id="tab-home" class="tab-content animate-fade">
@@ -390,6 +405,42 @@
           }
         }
       } catch(e) { console.log('Invalid saved bundle'); }
+    }
+
+    // ─── Local data reset ───
+    function clearAllLocalData() {
+      if (!confirm('This will clear your saved bundle, attendance, clash decisions, and profile. The dashboard will reload with the latest timetable. Continue?')) return;
+      localStorage.removeItem(BUNDLE_KEY);
+      localStorage.removeItem(PROFILE_KEY);
+      localStorage.removeItem(CLASH_DECISIONS_KEY);
+      // Clear all term4 attendance keys
+      Object.keys(localStorage).forEach(k => {
+        if (k.startsWith('term4_attendance_') || k.startsWith('term4_celebrated_')) {
+          localStorage.removeItem(k);
+        }
+      });
+      location.reload(true);
+    }
+
+    function showStaleBannerIfNeeded() {
+      const banner = document.getElementById('stale-banner');
+      if (!banner) return;
+      // Compare current loaded data with DEFAULT_DATA for the same courses
+      const defaultCodes = DEFAULT_DATA.courses.map(c => c.code).sort();
+      const currentCodes = data.courses.map(c => c.code).sort();
+      if (defaultCodes.join(',') !== currentCodes.join(',')) {
+        banner.classList.remove('hidden');
+        return;
+      }
+      for (const def of DEFAULT_DATA.courses) {
+        const cur = data.courses.find(c => c.code === def.code);
+        if (!cur) continue;
+        if (cur.totalSessions !== def.totalSessions || cur.startDate !== def.startDate || cur.endDate !== def.endDate || cur.sisterAllowed !== def.sisterAllowed) {
+          banner.classList.remove('hidden');
+          return;
+        }
+      }
+      banner.classList.add('hidden');
     }
 
     // Storage key includes bundle hash to prevent cross-bundle pollution
@@ -1407,6 +1458,7 @@
       data = newData;
       localStorage.setItem(BUNDLE_KEY, JSON.stringify(newData));
       closeBundlePicker();
+      showStaleBannerIfNeeded();
       renderHomeTab();
       renderCoursesTab();
       renderCalendarTab();
@@ -1417,7 +1469,7 @@
       if (!confirm('Reset to default bundle?')) return;
       localStorage.removeItem(BUNDLE_KEY);
       data = DEFAULT_DATA;
-      location.reload();
+      location.reload(true);
     }
 
     document.addEventListener('keydown', e => {
@@ -1428,6 +1480,7 @@
     setInterval(updateClock, 1000);
     updateClock();
     setInterval(updateHeroWidget, 60000);
+    showStaleBannerIfNeeded();
     const profile = getProfile();
     if (!profile.setupComplete) { openSetupModal(); }
     renderHomeTab();
